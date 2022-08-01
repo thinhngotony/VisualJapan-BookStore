@@ -379,6 +379,7 @@ namespace SelfRegi_V2
                     string json = System.Text.Json.JsonSerializer.Serialize(new
                     {
                         api_key = Session.bquery_key,
+                        dpp_shelf_name = "SHELF 1"
                     });
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     Console.WriteLine("======>" + content);
@@ -859,29 +860,7 @@ namespace SelfRegi_V2
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            //richTextBox1.Text = "";
-            Task.Run(() => ApiGetSmartSelfSetting()).Wait();
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
-
-            foreach (var Image_Items in ImageLayer.Controls)
-            {
-                PictureBox pic = Image_Items as PictureBox;
-                pic.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                if (Session.productPos.Keys.Contains(pic.Name))
-                {
-                    //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
-                    //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
-                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
-
-                    Task.Run(()=>ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
-                    pic.Load(Session.product.link_image);
-                    //Console.WriteLine(Session.product.link_image);
-                }
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
-            }
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
+            richTextBox1.Text = "";
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -3491,17 +3470,9 @@ namespace SelfRegi_V2
 
         }
 
-        private void btnRegis_Click(object sender, EventArgs e)
+        private void btnRegister_Click(object sender, EventArgs e)
         {
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).RFIDcode));
-            //List<ProductPos> lstProduct = new List<ProductPos>();
-            //lstProduct.Add(Session.productPos);
-
-            //foreach (KeyValuePair<string, ProductPos> author in Session.productPos)
-            //{
-            //    Console.WriteLine("Key: {0}, Value: {1}",
-            //        author.Key, author.Value);
-            //}
             Task.Run(() => ApiSetSmartSelfSetting()).Wait();
 
 
@@ -3516,6 +3487,43 @@ namespace SelfRegi_V2
 
         private void txtScanner_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => ApiGetSmartSelfSetting()).Wait();
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
+
+            foreach (var Image_Items in ImageLayer.Controls)
+            {
+                PictureBox pic = Image_Items as PictureBox;
+                pic.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                if (Session.productPos.Keys.Contains(pic.Name))
+                {
+                    //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
+                    //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
+                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+
+                    Task.Run(() => ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
+                    if (Session.product.link_image == "")
+                    {
+                        pic.Load("noimage.png");
+                    }
+                    else
+                    {
+                        pic.Load(Session.product.link_image);
+                    }
+                    //Console.WriteLine(Session.product.link_image);
+                }
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
+            }
+
+            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
+
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
         }
     }

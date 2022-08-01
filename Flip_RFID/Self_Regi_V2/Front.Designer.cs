@@ -67,8 +67,9 @@ namespace SelfRegi_V2
             this.label1 = new System.Windows.Forms.Label();
             this.txtScanner = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnRegister = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.btnLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_3)).BeginInit();
@@ -100,10 +101,10 @@ namespace SelfRegi_V2
             // lJan
             // 
             this.lJan.AutoSize = true;
-            this.lJan.Font = new System.Drawing.Font("MS Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lJan.Location = new System.Drawing.Point(1328, 295);
+            this.lJan.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
+            this.lJan.Location = new System.Drawing.Point(1336, 206);
             this.lJan.Name = "lJan";
-            this.lJan.Size = new System.Drawing.Size(134, 33);
+            this.lJan.Size = new System.Drawing.Size(85, 25);
             this.lJan.TabIndex = 7;
             this.lJan.Text = "Jancode";
             this.lJan.Click += new System.EventHandler(this.lJan_Click);
@@ -113,20 +114,20 @@ namespace SelfRegi_V2
             this.txtJan.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtJan.Enabled = false;
             this.txtJan.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
-            this.txtJan.Location = new System.Drawing.Point(1328, 331);
+            this.txtJan.Location = new System.Drawing.Point(1334, 234);
             this.txtJan.Name = "txtJan";
             this.txtJan.ReadOnly = true;
-            this.txtJan.Size = new System.Drawing.Size(260, 25);
+            this.txtJan.Size = new System.Drawing.Size(254, 25);
             this.txtJan.TabIndex = 6;
             this.txtJan.TextChanged += new System.EventHandler(this.txtJan_TextChanged);
             // 
             // lRfid
             // 
             this.lRfid.AutoSize = true;
-            this.lRfid.Font = new System.Drawing.Font("MS Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lRfid.Location = new System.Drawing.Point(1332, 207);
+            this.lRfid.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
+            this.lRfid.Location = new System.Drawing.Point(1336, 150);
             this.lRfid.Name = "lRfid";
-            this.lRfid.Size = new System.Drawing.Size(83, 33);
+            this.lRfid.Size = new System.Drawing.Size(52, 25);
             this.lRfid.TabIndex = 5;
             this.lRfid.Text = "RFID";
             this.lRfid.Click += new System.EventHandler(this.lRfid_Click);
@@ -136,10 +137,10 @@ namespace SelfRegi_V2
             this.txtRfid.AcceptsTab = true;
             this.txtRfid.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtRfid.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
-            this.txtRfid.Location = new System.Drawing.Point(1328, 243);
+            this.txtRfid.Location = new System.Drawing.Point(1334, 178);
             this.txtRfid.Name = "txtRfid";
             this.txtRfid.ReadOnly = true;
-            this.txtRfid.Size = new System.Drawing.Size(260, 25);
+            this.txtRfid.Size = new System.Drawing.Size(254, 25);
             this.txtRfid.TabIndex = 4;
             this.txtRfid.TextChanged += new System.EventHandler(this.txtRfid_TextChanged);
             // 
@@ -148,7 +149,7 @@ namespace SelfRegi_V2
             this.btnClear.Font = new System.Drawing.Font("MS Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnClear.Location = new System.Drawing.Point(1338, 886);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(260, 33);
+            this.btnClear.Size = new System.Drawing.Size(250, 33);
             this.btnClear.TabIndex = 12;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
@@ -157,11 +158,11 @@ namespace SelfRegi_V2
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.richTextBox1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(1338, 827);
+            this.richTextBox1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.Location = new System.Drawing.Point(1338, 763);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(260, 53);
+            this.richTextBox1.Size = new System.Drawing.Size(250, 108);
             this.richTextBox1.TabIndex = 28;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
@@ -171,9 +172,9 @@ namespace SelfRegi_V2
             this.btnConnect.BackColor = System.Drawing.Color.Teal;
             this.btnConnect.Font = new System.Drawing.Font("MS Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnConnect.ForeColor = System.Drawing.Color.White;
-            this.btnConnect.Location = new System.Drawing.Point(1338, 777);
+            this.btnConnect.Location = new System.Drawing.Point(1338, 703);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(260, 44);
+            this.btnConnect.Size = new System.Drawing.Size(250, 44);
             this.btnConnect.TabIndex = 5;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = false;
@@ -517,20 +518,20 @@ namespace SelfRegi_V2
             this.txtSelf.AcceptsTab = true;
             this.txtSelf.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtSelf.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
-            this.txtSelf.Location = new System.Drawing.Point(1332, 160);
+            this.txtSelf.Location = new System.Drawing.Point(1334, 109);
             this.txtSelf.Name = "txtSelf";
             this.txtSelf.ReadOnly = true;
-            this.txtSelf.Size = new System.Drawing.Size(250, 25);
+            this.txtSelf.Size = new System.Drawing.Size(254, 25);
             this.txtSelf.TabIndex = 57;
             this.txtSelf.TextChanged += new System.EventHandler(this.txtSelf_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("MS Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(1326, 115);
+            this.label1.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(1333, 81);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(100, 33);
+            this.label1.Size = new System.Drawing.Size(55, 25);
             this.label1.TabIndex = 58;
             this.label1.Text = "Shelf";
             // 
@@ -539,10 +540,10 @@ namespace SelfRegi_V2
             this.txtScanner.AcceptsTab = true;
             this.txtScanner.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtScanner.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
-            this.txtScanner.Location = new System.Drawing.Point(1332, 73);
+            this.txtScanner.Location = new System.Drawing.Point(1334, 44);
             this.txtScanner.Name = "txtScanner";
             this.txtScanner.ReadOnly = true;
-            this.txtScanner.Size = new System.Drawing.Size(250, 25);
+            this.txtScanner.Size = new System.Drawing.Size(254, 25);
             this.txtScanner.TabIndex = 59;
             this.txtScanner.Text = " ";
             this.txtScanner.TextChanged += new System.EventHandler(this.txtScanner_TextChanged);
@@ -550,34 +551,47 @@ namespace SelfRegi_V2
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("MS Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(1326, 28);
+            this.label2.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(1329, 13);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 33);
+            this.label2.Size = new System.Drawing.Size(82, 25);
             this.label2.TabIndex = 60;
             this.label2.Text = "Scanner";
             // 
-            // button1
+            // btnRegister
             // 
-            this.button1.BackColor = System.Drawing.Color.Teal;
-            this.button1.Font = new System.Drawing.Font("MS Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(1338, 728);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(260, 43);
-            this.button1.TabIndex = 61;
-            this.button1.Text = "Register";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.btnRegis_Click);
+            this.btnRegister.BackColor = System.Drawing.Color.Teal;
+            this.btnRegister.Font = new System.Drawing.Font("MS Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnRegister.ForeColor = System.Drawing.Color.White;
+            this.btnRegister.Location = new System.Drawing.Point(1338, 596);
+            this.btnRegister.Name = "btnRegister";
+            this.btnRegister.Size = new System.Drawing.Size(250, 43);
+            this.btnRegister.TabIndex = 61;
+            this.btnRegister.Text = "Register";
+            this.btnRegister.UseVisualStyleBackColor = false;
+            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(1338, 394);
+            this.pictureBox.Location = new System.Drawing.Point(1338, 280);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(250, 300);
             this.pictureBox.TabIndex = 56;
             this.pictureBox.TabStop = false;
             this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click_2);
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.BackColor = System.Drawing.Color.Teal;
+            this.btnLoad.Font = new System.Drawing.Font("MS Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLoad.ForeColor = System.Drawing.Color.White;
+            this.btnLoad.Location = new System.Drawing.Point(1338, 648);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(250, 43);
+            this.btnLoad.TabIndex = 62;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = false;
+            this.btnLoad.Click += new System.EventHandler(this.button2_Click);
             // 
             // Front
             // 
@@ -585,8 +599,9 @@ namespace SelfRegi_V2
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1600, 931);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.pictureBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.txtScanner);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtSelf);
@@ -675,8 +690,9 @@ namespace SelfRegi_V2
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtScanner;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.Button btnLoad;
     }
 }
 

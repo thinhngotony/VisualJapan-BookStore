@@ -482,30 +482,30 @@ namespace SelfRegi_V2
             // ImageLayer
             // 
             this.ImageLayer.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ImageLayer.Controls.Add(this.pictureBox_4_6);
             this.ImageLayer.Controls.Add(this.pictureBox_1_1);
-            this.ImageLayer.Controls.Add(this.pictureBox_4_5);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_6);
-            this.ImageLayer.Controls.Add(this.pictureBox_4_4);
             this.ImageLayer.Controls.Add(this.pictureBox_1_2);
-            this.ImageLayer.Controls.Add(this.pictureBox_4_3);
             this.ImageLayer.Controls.Add(this.pictureBox_1_3);
-            this.ImageLayer.Controls.Add(this.pictureBox_4_2);
             this.ImageLayer.Controls.Add(this.pictureBox_1_4);
-            this.ImageLayer.Controls.Add(this.pictureBox_4_1);
             this.ImageLayer.Controls.Add(this.pictureBox_1_5);
             this.ImageLayer.Controls.Add(this.pictureBox_1_6);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_5);
             this.ImageLayer.Controls.Add(this.pictureBox_2_1);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_4);
             this.ImageLayer.Controls.Add(this.pictureBox_2_2);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_3);
             this.ImageLayer.Controls.Add(this.pictureBox_2_3);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_2);
             this.ImageLayer.Controls.Add(this.pictureBox_2_4);
-            this.ImageLayer.Controls.Add(this.pictureBox_3_1);
             this.ImageLayer.Controls.Add(this.pictureBox_2_5);
             this.ImageLayer.Controls.Add(this.pictureBox_2_6);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_1);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_2);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_3);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_4);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_5);
+            this.ImageLayer.Controls.Add(this.pictureBox_3_6);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_1);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_2);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_3);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_4);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_5);
+            this.ImageLayer.Controls.Add(this.pictureBox_4_6);
             this.ImageLayer.Location = new System.Drawing.Point(3, 2);
             this.ImageLayer.Name = "ImageLayer";
             this.ImageLayer.Size = new System.Drawing.Size(1319, 917);
@@ -545,6 +545,7 @@ namespace SelfRegi_V2
             this.txtScanner.Size = new System.Drawing.Size(250, 25);
             this.txtScanner.TabIndex = 59;
             this.txtScanner.Text = " ";
+            this.txtScanner.TextChanged += new System.EventHandler(this.txtScanner_TextChanged);
             // 
             // label2
             // 
@@ -567,7 +568,7 @@ namespace SelfRegi_V2
             this.button1.TabIndex = 61;
             this.button1.Text = "Register";
             this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.btnRegis_Click);
             // 
             // pictureBox
             // 

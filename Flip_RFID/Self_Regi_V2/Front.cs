@@ -34,7 +34,7 @@ namespace SelfRegi_V2
             init();
 
             dt = ReadCsvFile(Session.path);
-            Console.WriteLine("ROWS count ===========>" + dt.Columns.Count);
+            //Console.WriteLine("ROWS count ===========>" + dt.Columns.Count);
             Session.front = this;
             txtRfid.Text = Session.rfidcode;
             txtJan.Text = Session.barcode;
@@ -52,19 +52,6 @@ namespace SelfRegi_V2
         }
 
 
-        private void startDialog()
-        {
-            DialogResult confirmResult = MessageBox.Show("このアプリが使えるにはWEBPOSの再起動が必要です。続きますか？", "Confirm Diaglog", MessageBoxButtons.YesNo);
-
-            if (confirmResult == DialogResult.No)
-            {
-                Environment.Exit(1);
-
-            }
-        }
-
-
-
         private void closeWebpos()
         {
 
@@ -80,6 +67,7 @@ namespace SelfRegi_V2
 
             Session.address_api = dataInFile["address_api"];
             Session.sub_set_smart_self_setting = dataInFile["sub_set_smart_self_setting"];
+            Session.sub_get_smart_self_setting = dataInFile["sub_get_smart_self_setting"];
 
 
             Session.rfmaster_sub_delete = dataInFile["sub_url_delete"];
@@ -92,7 +80,7 @@ namespace SelfRegi_V2
             Session.reload = dataInFile["reload"];
             Session.sync_api = dataInFile["sync_api"];
             Session.sync_sub = dataInFile["sync_sub"];
-            Console.WriteLine(Session.bquery_api + " ===== " + Session.bquery_key + " ===== " + Session.bquery_sub);
+            //Console.WriteLine(Session.bquery_api + " ===== " + Session.bquery_key + " ===== " + Session.bquery_sub);
             Session.device_name = dataInFile["device_name"];
             Session.path = dataInFile["path"];
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);// them bien rT vo GLobal
@@ -101,8 +89,12 @@ namespace SelfRegi_V2
 
             foreach (var Image_Items in ImageLayer.Controls)
             {
-                (Image_Items as PictureBox).SizeMode = PictureBoxSizeMode.StretchImage;
-                (Image_Items as PictureBox).Load("noimage.png");
+                PictureBox pic = Image_Items as PictureBox;
+                pic.SizeMode = PictureBoxSizeMode.StretchImage;
+                pic.Load("noimage.png");
+
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
             }
         }
 
@@ -149,98 +141,6 @@ namespace SelfRegi_V2
         public void resetLoading()
         {
             lastChoose.Image = null;
-        }
-
-
-
-        //get item data from api
-        private async Task Api_Recv()
-        {
-            try
-            {
-                barcode_state = false;
-                Session.product = new ProductData();
-                //Console.WriteLine(Session.barcode);
-                HttpClient api_client = new HttpClient();
-                api_client.BaseAddress = new Uri(Session.bquery_api);
-                api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                string json = System.Text.Json.JsonSerializer.Serialize(new
-                {
-                    //api_key = Session.bquery_key,
-                    jancode = Session.barcode,
-                });
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var result = await api_client.PostAsync(Session.bquery_sub, content);
-                if (result.IsSuccessStatusCode)
-                {
-                    string resultContent = await result.Content.ReadAsStringAsync();
-                    JObject data = JObject.Parse(resultContent);
-
-                    api_status = (string)data["code"];
-                    api_message = (string)data["message"];
-                    if (api_status.Equals("00"))
-                    {
-                        //Session.product.ccode = (string)data["data"]["bqsg_c_code"] == null ? "//" : (string)data["data"]["bqsg_c_code"];
-                        //Session.product.artist_name = (string)data["data"]["bqsg_artist_name"] == "" ? "//" : (string)data["data"]["bqsg_artist_name"];
-                        //Session.product.Jancode = Session.barcode;
-                        //Session.product.Jancode2 = getJan2();
-                        ////Session.product.makerCD = (string)data["data"]["drgm_maker_cd"] == "" ? "//" : (string)data["data"]["drgm_maker_cd"];
-                        //Session.product.goods_type = (string)data["data"]["bqsg_goods_type"];
-                        //Session.product.goods_name = (string)data["data"]["bqsg_goods_name"];
-                        //Session.product.media_cd = (string)data["data"]["bqsg_media_cd"];
-                        //Session.product.price = (int)data["data"]["bqsg_price"];
-                        //Session.product.tax_rate = 1.1;
-                        ////Session.product.price = Convert.ToInt32(Math.Floor(Session.product.price * Session.product.tax_rate)); 
-                        ////Session.product.price = (int)data["data"]["bqsq_shop_goods_price"];
-
-                        //Session.product.price_intax = Convert.ToInt32(Math.Floor(Session.product.price * Session.product.tax_rate));
-
-                        Session.product.ccode = (string)data["data"]["c_code"] == null ? "" : (string)data["data"]["c_code"];
-                        Session.product.artist_name = (string)data["data"]["artist_name"] == "" ? "" : (string)data["data"]["artist_name"];
-                        Session.product.artist_kana = (string)data["data"]["artist_kana"] == "" ? "" : (string)data["data"]["artist_kana"];
-                        Session.product.Jancode = Session.barcode;
-                        Session.product.goods_name = (string)data["data"]["goods_name"];
-                        Session.product.goods_name_kana = (string)data["data"]["goods_name_kana"];
-                        Session.product.media_cd = (string)data["data"]["media_cd"];
-                        Session.product.genreCD = (string)data["data"]["genre_cd"];
-                        Session.product.price = (int)data["data"]["price"];
-                        Session.product.tax_rate = 1.1;
-                        Session.product.price_intax = Convert.ToInt32(Math.Floor(Session.product.price * Session.product.tax_rate));
-
-                        Console.WriteLine("==================> Price in tax: " + Session.product.price_intax);
-                        Session.product.cost_rate = (float)data["data"]["cost_rate"];
-
-
-                        //add ,iss fields
-                        Session.product.makerCD = (string)data["data"]["publisher_cd"];
-                        Session.product.maker_name = (string)data["data"]["publisher_name"];
-                        Session.product.maker_name_kana = (string)data["data"]["publisher_name_kana"];
-                        Session.product.selling_date = (string)data["data"]["selling_date"];
-                    }
-
-
-
-                    Console.WriteLine();
-                }
-
-                else
-                {
-                    Console.WriteLine(result);
-                    Console.WriteLine("Connect to API Server Failed.");
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("===============================================");
-                Console.WriteLine(e.Message);
-            }
-            //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Get Info Successfully";
-            //string jan2 = getJan2();
-            //Console.WriteLine(jan2);
-
-
-
         }
 
 
@@ -299,7 +199,7 @@ namespace SelfRegi_V2
                     }
                     else
                     {
-                        Console.WriteLine(result);
+                        //Console.WriteLine(result);
                         Console.WriteLine("Connect to API Server Failed.");
                     }
 
@@ -307,7 +207,7 @@ namespace SelfRegi_V2
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
             }
         }
 
@@ -350,7 +250,7 @@ namespace SelfRegi_V2
                         api_message = "Received image from server successfully";
                         if (Session.product.isbn != "")
                         {
-                            Console.WriteLine(Session.product.link_image);
+                            //Console.WriteLine(Session.product.link_image);
                             pictureBox.LoadAsync(Session.product.link_image);
                         }
                         else
@@ -367,13 +267,54 @@ namespace SelfRegi_V2
             }
         }
 
+        private async Task ApiGetImageByISBN(string isbn)
+        {
+            try
+            {
+                pictureBox.Load("noimage.png");
+                barcode_state = false;
+                Session.image_sub = "isbn=";
+                //Session.product = new ProductData();
+                HttpClient api_client = new HttpClient();
+                api_client.BaseAddress = new Uri(Session.image_api);
+                //api_client.DefaultRequestHeaders.Add("Authorization", Session.haravan_key_name + " " + Session.haravan_key_pass);
+
+                var builder = new UriBuilder(Session.image_api);
+
+                //builder.Query = Session.haravan_sub + Session.barcode;
+                builder.Query = Session.image_sub + isbn;
+                var url = builder.ToString();
+                var res = await api_client.GetAsync(url);
+
+                var content = await res.Content.ReadAsStringAsync();
 
 
+                // Extract value from response data
+
+                JArray jsonArray = JArray.Parse(content);
+                dynamic data = JObject.Parse(jsonArray[0].ToString());
 
 
+                if (content != "")
+                {
+                    if (data.summary.cover != "")
+                    {
+                        Session.product.link_image = data.summary.cover;
+                        // Displayed in the user interface
+                        api_message = "Received image from server successfully";
+                        pictureBox.Load("noimage.png");
+                        
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                api_message = "No image found";
+                Console.WriteLine(e);
+            }
+        }
 
-        //post item data to rfid_master
-        private async Task ApiSend()
+        private async Task ApiSetSmartSelfSetting()
         {
             try
             {
@@ -381,123 +322,119 @@ namespace SelfRegi_V2
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                string json = System.Text.Json.JsonSerializer.Serialize(new
+
+                foreach (var key in Session.productPos.Keys)
                 {
-                    api_key = Session.rfmaster_key,
-                    force_update = Session.force_update,
+                    string json = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        api_key = Session.bquery_key,
+                        dpp_shelf_pos = Int32.Parse(Session.productPos[key].shelf_pos),
+                        dpp_shelf_col_pos = Int32.Parse(Session.productPos[key].shelf_col_pos),
+                        dpp_jan_cd = Session.productPos[key].Jancode,
+                        dpp_rfid_cd = Session.productPos[key].RFIDcode,
+                        dpp_isbn = Session.productPos[key].isbn,
+                        dpp_product_name = Session.productPos[key].product_name,
+                        dpp_scaner_name = txtScanner.Text,
+                        dpp_shelf_name = Session.productPos[key].shelf_name
+                    });
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    Console.WriteLine("======>" + content);
+                    var result = await api_client.PostAsync(Session.sub_set_smart_self_setting, content);
 
+                    if (result.IsSuccessStatusCode)
+                    {
 
-                    drgm_pos_shop_cd = Session.SHOPCD,
+                        string resultContent = await result.Content.ReadAsStringAsync();
+                        JObject data = JObject.Parse(resultContent);
+                        Console.WriteLine(resultContent);
+                        api_message = (string)data["message"];
+                        api_status = (string)data["code"];
+                    }
+                    else
+                    {
+                        Console.WriteLine(result);
 
-                    //use book code
-                    rf_goods_type = "1",
-
-                    //use rfid code
-                    rf_goods_cd_type = "0",
-
-                    drgm_rfid_cd = rfid_cd,
-                    drgm_jan = jan_cd,
-                    drgm_jan2 = Session.product.Jancode2,
-                    drgm_goods_name = Session.product.goods_name,
-                    drgm_goods_name_kana = Session.product.goods_name_kana,
-                    drgm_artist = Session.product.artist_name,
-                    drgm_artist_kana = Session.product.artist_kana,
-                    drgm_maker_cd = Session.product.makerCD,
-                    drgm_maker_name = Session.product.maker_name,
-                    drgm_genre_cd = Session.product.genreCD,
-                    drgm_maker_name_kana = Session.product.maker_name_kana,
-                    drgm_c_code = Session.product.ccode,
-                    drgm_selling_date = Session.product.selling_date,
-                    drgm_price_tax_off = Session.product.price,
-
-                    drgm_cost_rate = Session.product.cost_rate,
-                    drgm_cost_price = Session.product.cost_price,
-                    drgm_media_cd = Session.product.media_cd
-
-                });
-
-
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                Console.WriteLine("======>" + content);
-                var result = await api_client.PostAsync(Session.rfmaster_sub, content);
-
-                if (result.IsSuccessStatusCode)
-                {
-
-                    string resultContent = await result.Content.ReadAsStringAsync();
-                    JObject data = JObject.Parse(resultContent);
-
-                    //api_message = (string)data["message"];
-                    //richTextBox1.Text += DateTime.Now.ToString("h:mm:ss tt") + ": " + message.message + "\n";
-                    Console.WriteLine(resultContent);
-                    //updateCSVShopDB();
-                    api_message = (string)data["message"];
-                    api_status = (string)data["code"];
-                }
-                else
-                {
-                    Console.WriteLine(result);
-
-                    Console.WriteLine("Connect to API Server Failed.");
+                        Console.WriteLine("Connect to API Server Failed.");
+                    }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
             }
-
-
-
-
 
         }
 
-        // Delete rows from RFID master
-        private async Task ApiDelete()
-        {
 
+
+        private async Task ApiGetSmartSelfSetting()
+        {
             try
             {
+
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var rfids = new string[] { Session.rfidcode };
-                string json = System.Text.Json.JsonSerializer.Serialize(new
-                {
-                    api_key = Session.rfmaster_key,
-                    rfid = rfids
+                    string json = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        api_key = Session.bquery_key,
+                    });
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    Console.WriteLine("======>" + content);
+                    var result = await api_client.PostAsync(Session.sub_get_smart_self_setting, content);
 
-                });
+                    if (result.IsSuccessStatusCode)
+                    {
+
+                        string resultContent = await result.Content.ReadAsStringAsync();
+                        JObject JsonData = JObject.Parse(resultContent);
 
 
+                    List<ProductPos> lstProduct = new List<ProductPos>();
+                    foreach (var item in JsonData["data"])
+                    {
+                        int col = Int32.Parse(item["dpp_shelf_col_pos"].ToString());
+                        int row = Int32.Parse(item["dpp_shelf_pos"].ToString());
+                        ProductPos data = new ProductPos
+                        {
+                            Jancode = (string)item["dpp_jan_cd"],
+                            RFIDcode = (string)item["dpp_rfid_cd"],
+                            shelf_col_pos = col.ToString(),
+                            shelf_pos = row.ToString(),
+                            product_name = (string)item["dpp_product_name"],
+                            shelf_name = (string)item["dpp_shelf_name"],
+                            isbn = (string)item["dpp_isbn"],
+                        };
 
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var result = await api_client.PostAsync(Session.rfmaster_sub_delete, content);
+                        string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+                        Session.productPos[name] = data;
+                        Console.WriteLine(name);
+                    }
+                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == 1 && x.Value.row == 1).Key;
 
-                if (result.IsSuccessStatusCode)
-                {
 
-                    string resultContent = await result.Content.ReadAsStringAsync();
-                    JObject data = JObject.Parse(resultContent);
-                    Console.WriteLine(resultContent);
-                    api_message = (string)data["message"];
-                    api_status = (string)data["code"];
-                }
-                else
-                {
-                    Console.WriteLine(result);
-                    Console.WriteLine("Connect to API Server Failed.");
-                }
+                    //Session.productPos. = (string)data["data"]["dpp_shelf_pos"];
+
+                    api_message = (string)JsonData["message"];
+                        api_status = (string)JsonData["code"];
+                    }
+                    else
+                    {
+                        Console.WriteLine(result);
+
+                        Console.WriteLine("Connect to API Server Failed.");
+                    }
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
             }
 
-
         }
+
+
 
         // Search Jan1 from RFID
         private async Task ApiRFIDtoJan()
@@ -509,7 +446,7 @@ namespace SelfRegi_V2
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var rfids = new string[] { Session.rfidcode };
+                var rfids = new string[] {Session.rfidcode};
                 string json = System.Text.Json.JsonSerializer.Serialize(new
                 {
                     api_key = Session.rfmaster_key,
@@ -531,6 +468,8 @@ namespace SelfRegi_V2
                     Session.barcode = (string)data["data"][0]["jancode_1"];
                     Console.WriteLine(Session.barcode);
                 }
+
+                
                 else
                 {
                     Console.WriteLine(result);
@@ -724,22 +663,6 @@ namespace SelfRegi_V2
             }
             return -1;
         }
-        //private int isDataValid()
-        //{
-
-        //    if (lJancode2.Text.Equals(""))
-        //    {
-        //        if (!Session.barcode.Equals(""))
-        //        {
-        //            if (Session.barcode.Substring(0, 3).Equals("978"))
-        //            {
-        //                return 1;
-        //            }
-        //        }
-
-        //    }
-        //    return 0;
-        //}
 
 
         public string rfid_cd;
@@ -758,6 +681,14 @@ namespace SelfRegi_V2
                 Task.Run(() => ApiGetDataFromBQ()).Wait();
                 wait.Visible = false;
                 Task.Run(() => ApiGetImage()).Wait();
+
+                //Clear after test
+                rfid_cd = "E280689400005017E3139C39";
+                Session.rfidcode = "E280689400005017E3139C39";
+                updateView();
+                //End clear
+
+
 
 
 
@@ -790,12 +721,12 @@ namespace SelfRegi_V2
                                 dt.Rows[res]["gdm_media_cd"] = Session.product.media_cd;
                                 dt.Rows[res][7] = "1";
                                 //updateCSVShopDB();
-                                Console.WriteLine("======= Is in Localdb");
+                                //Console.WriteLine("======= Is in Localdb");
                                 ToCSV();
                                 richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Updated LocalDB.\n";
 
                                 wait.Visible = true;
-                                Task.Run(() => ApiSend()).Wait();
+                                //Task.Run(() => ApiSend()).Wait();
                                 wait.Visible = false;
 
                                 //Task.Run(() => ApiSend()).Wait();
@@ -813,7 +744,7 @@ namespace SelfRegi_V2
                                     //Console.WriteLine(dt.Rows[0][7]);
 
                                     wait.Visible = true;
-                                    Task.Run(() => ApiSend()).Wait();
+                                    //Task.Run(() => ApiSend()).Wait();
                                     wait.Visible = false;
 
                                     //Task.Run(() => ApiSend()).Wait();
@@ -928,7 +859,29 @@ namespace SelfRegi_V2
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text = "";
+            //richTextBox1.Text = "";
+            Task.Run(() => ApiGetSmartSelfSetting()).Wait();
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
+
+            foreach (var Image_Items in ImageLayer.Controls)
+            {
+                PictureBox pic = Image_Items as PictureBox;
+                pic.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                if (Session.productPos.Keys.Contains(pic.Name))
+                {
+                    //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
+                    //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
+                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+
+                    Task.Run(()=>ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
+                    pic.Load(Session.product.link_image);
+                    //Console.WriteLine(Session.product.link_image);
+                }
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
+                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
+            }
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -941,17 +894,6 @@ namespace SelfRegi_V2
 
 
         //New
-        private async void btnWritecsv_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                await sync_api();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
 
 
         private void txtCCode_KeyPress(object sender, KeyPressEventArgs e)
@@ -972,17 +914,6 @@ namespace SelfRegi_V2
 
         private void txtRfid_TextChanged(object sender, EventArgs e)
         {
-            //Wait wait = new Wait();
-            //wait.Visible = true;
-            //Task.Run(() => ApiRFIDtoJan()).Wait();
-            //Task.Run(() => ApiGetDataFromBQ()).Wait();
-            //Task.Run(() => ApiGetImage()).Wait();
-            //wait.Visible = false;
-            //updateView();
-            ////Session.front.rfid_reading = false;
-            //opos.OPOS_StopReading(Session.OPOSRFID1);
-            //btnConnect.Text = "StartReading";
-            ////resetLabel(3);
 
         }
 
@@ -1245,7 +1176,7 @@ namespace SelfRegi_V2
 
             //Stop read
             public void OPOS_StopReading(AxOPOSRFID OPOSRFID1)
-            {
+            { 
                 int Result;
                 Result = OPOSRFID1.StopReadTags("00000000");
                 if (Result != OposStatus.OposSuccess)
@@ -3475,11 +3406,13 @@ namespace SelfRegi_V2
                         //Session.productPos.Add(, data);
                         lastChoose = choosingImage;
 
-                        //ProductPos x = Session.productPos["pictureBoxA1"];
-                        //Console.WriteLine(x.RFIDcode); 
-                       
+                        //ProductPos x = Session.productPos[" "];
+                        //Console.WriteLine(x.RFIDcode);
 
-                    } else
+                     
+
+                    }
+                    else
                     {
                         Console.WriteLine("No image to show");
                     }
@@ -3501,7 +3434,7 @@ namespace SelfRegi_V2
 
             }
 
-            Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Add "+ x.ToString()));
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Add "+ x.ToString()));
 
 
 
@@ -3558,12 +3491,30 @@ namespace SelfRegi_V2
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnRegis_Click(object sender, EventArgs e)
         {
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).RFIDcode));
+            //List<ProductPos> lstProduct = new List<ProductPos>();
+            //lstProduct.Add(Session.productPos);
+
+            //foreach (KeyValuePair<string, ProductPos> author in Session.productPos)
+            //{
+            //    Console.WriteLine("Key: {0}, Value: {1}",
+            //        author.Key, author.Value);
+            //}
+            Task.Run(() => ApiSetSmartSelfSetting()).Wait();
+
+
+
 
         }
 
         private void txtSelf_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtScanner_TextChanged(object sender, EventArgs e)
         {
 
         }

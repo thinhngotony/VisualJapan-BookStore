@@ -14,9 +14,9 @@ namespace SelfRegi_V2
         public static AxOPOSRFIDLib.AxOPOSRFID OPOSRFID1 = new AxOPOSRFIDLib.AxOPOSRFID();
         public static Front front;
         public static string device_name = "";
-        public static string rfidcode = "30838EE09E6080025B32F22A";
-        //E2806810000000391B7FA508
-        //public static string rfidcode = "E2806810000000391B7FA508";
+        public static string rfidcode = "";
+        //E280689400005017E3139C39
+        //E280689400004017E313F439
         public static string barcode = "";
         //9784003102787
         public static int rT = 500;
@@ -33,6 +33,7 @@ namespace SelfRegi_V2
         public static string image_sub = "";
 
         public static string sub_set_smart_self_setting = "";
+        public static string sub_get_smart_self_setting = "";
 
 
 

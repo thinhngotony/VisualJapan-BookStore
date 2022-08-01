@@ -63,7 +63,7 @@ namespace SelfRegi_V2
             this.pictureBox_4_2 = new System.Windows.Forms.PictureBox();
             this.pictureBox_4_1 = new System.Windows.Forms.PictureBox();
             this.ImageLayer = new System.Windows.Forms.Panel();
-            this.txtSelf = new System.Windows.Forms.TextBox();
+            this.txtShelf = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtScanner = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -113,7 +113,7 @@ namespace SelfRegi_V2
             // 
             this.txtJan.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtJan.Enabled = false;
-            this.txtJan.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
+            this.txtJan.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtJan.Location = new System.Drawing.Point(1334, 234);
             this.txtJan.Name = "txtJan";
             this.txtJan.ReadOnly = true;
@@ -136,7 +136,7 @@ namespace SelfRegi_V2
             // 
             this.txtRfid.AcceptsTab = true;
             this.txtRfid.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.txtRfid.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
+            this.txtRfid.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtRfid.Location = new System.Drawing.Point(1334, 178);
             this.txtRfid.Name = "txtRfid";
             this.txtRfid.ReadOnly = true;
@@ -162,7 +162,7 @@ namespace SelfRegi_V2
             this.richTextBox1.Location = new System.Drawing.Point(1338, 763);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(250, 108);
+            this.richTextBox1.Size = new System.Drawing.Size(250, 117);
             this.richTextBox1.TabIndex = 28;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
@@ -513,17 +513,16 @@ namespace SelfRegi_V2
             this.ImageLayer.TabIndex = 56;
             this.ImageLayer.Paint += new System.Windows.Forms.PaintEventHandler(this.ImageLayer_Paint);
             // 
-            // txtSelf
+            // txtShelf
             // 
-            this.txtSelf.AcceptsTab = true;
-            this.txtSelf.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.txtSelf.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
-            this.txtSelf.Location = new System.Drawing.Point(1334, 109);
-            this.txtSelf.Name = "txtSelf";
-            this.txtSelf.ReadOnly = true;
-            this.txtSelf.Size = new System.Drawing.Size(254, 25);
-            this.txtSelf.TabIndex = 57;
-            this.txtSelf.TextChanged += new System.EventHandler(this.txtSelf_TextChanged);
+            this.txtShelf.AcceptsTab = true;
+            this.txtShelf.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtShelf.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
+            this.txtShelf.Location = new System.Drawing.Point(1334, 109);
+            this.txtShelf.Name = "txtShelf";
+            this.txtShelf.Size = new System.Drawing.Size(254, 25);
+            this.txtShelf.TabIndex = 57;
+            this.txtShelf.TextChanged += new System.EventHandler(this.txtShelf_TextChanged);
             // 
             // label1
             // 
@@ -539,7 +538,7 @@ namespace SelfRegi_V2
             // 
             this.txtScanner.AcceptsTab = true;
             this.txtScanner.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.txtScanner.Font = new System.Drawing.Font("MS Gothic", 13F, System.Drawing.FontStyle.Bold);
+            this.txtScanner.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtScanner.Location = new System.Drawing.Point(1334, 44);
             this.txtScanner.Name = "txtScanner";
             this.txtScanner.ReadOnly = true;
@@ -585,13 +584,13 @@ namespace SelfRegi_V2
             this.btnLoad.BackColor = System.Drawing.Color.Teal;
             this.btnLoad.Font = new System.Drawing.Font("MS Gothic", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnLoad.ForeColor = System.Drawing.Color.White;
-            this.btnLoad.Location = new System.Drawing.Point(1338, 648);
+            this.btnLoad.Location = new System.Drawing.Point(1338, 645);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(250, 43);
             this.btnLoad.TabIndex = 62;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = false;
-            this.btnLoad.Click += new System.EventHandler(this.button2_Click);
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // Front
             // 
@@ -604,7 +603,7 @@ namespace SelfRegi_V2
             this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.txtScanner);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtSelf);
+            this.Controls.Add(this.txtShelf);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.lJan);
@@ -686,7 +685,7 @@ namespace SelfRegi_V2
         private System.Windows.Forms.PictureBox pictureBox_4_2;
         private System.Windows.Forms.PictureBox pictureBox_4_1;
         private System.Windows.Forms.Panel ImageLayer;
-        private System.Windows.Forms.TextBox txtSelf;
+        private System.Windows.Forms.TextBox txtShelf;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtScanner;
         private System.Windows.Forms.Label label2;

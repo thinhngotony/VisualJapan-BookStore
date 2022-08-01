@@ -22,7 +22,6 @@ namespace SelfRegi_V2
         OPOS opos;
         public string barcode = "";
         public bool barcode_state = true;
-        DataTable dt;
         string api_status = "";
         string api_message = "";
         bool rfid_reading = true;
@@ -32,15 +31,10 @@ namespace SelfRegi_V2
             this.StartPosition = FormStartPosition.Manual;
             this.CenterToScreen();
             init();
-
-            dt = ReadCsvFile(Session.path);
-            //Console.WriteLine("ROWS count ===========>" + dt.Columns.Count);
             Session.front = this;
             txtRfid.Text = Session.rfidcode;
             txtJan.Text = Session.barcode;
             txtScanner.Text = Session.scanner_name;
-            //panel2.Focus();
-            txtRfid.Focus();
         }
 
         private void RestartWebPOS()
@@ -82,7 +76,6 @@ namespace SelfRegi_V2
             Session.sync_sub = dataInFile["sync_sub"];
             //Console.WriteLine(Session.bquery_api + " ===== " + Session.bquery_key + " ===== " + Session.bquery_sub);
             Session.device_name = dataInFile["device_name"];
-            Session.path = dataInFile["path"];
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);// them bien rT vo GLobal
             Session.JanLen = (int)Int64.Parse(dataInFile["JanLen"]);
             Session.scanner_name = dataInFile["device_name"];
@@ -120,28 +113,11 @@ namespace SelfRegi_V2
                 Session.product = new ProductData();
                 Session.barcode = "";
                 Session.rfidcode = "";
-                //pictureBox.Image = pictureBox.BackgroundImage;
-
                 txtRfid.Text = "";
                 txtJan.Text = "";
             }
-            if (mode == 3)
-            {
-                Session.product = new ProductData();
-
-                //rfid_cd = "";
-                Session.product.RFIDcode = "";
-                Session.barcode = "";
-                pictureBox.Image = pictureBox.BackgroundImage;
-                barcode = "";
-                txtJan.Text = "";
-            }
         }
 
-        public void resetLoading()
-        {
-            lastChoose.Image = null;
-        }
 
 
 
@@ -150,9 +126,7 @@ namespace SelfRegi_V2
         {
             try
             {
-                //pictureBox.Load("noimage.png");
                 Session.product = new ProductData();
-                //Console.WriteLine(Session.barcode);
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.bquery_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -188,7 +162,7 @@ namespace SelfRegi_V2
                         Session.product.price_intax = Convert.ToInt32(Math.Floor(Session.product.price * Session.product.tax_rate));
                         Session.product.cost_rate = (float)data["data"]["cost_rate"];
 
-                        //add iss fields
+                        //add more fields
                         Session.product.makerCD = (string)data["data"]["publisher_cd"];
                         Session.product.maker_name = (string)data["data"]["publisher_name"];
                         Session.product.maker_name_kana = (string)data["data"]["publisher_name_kana"];
@@ -205,9 +179,9 @@ namespace SelfRegi_V2
 
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //Console.WriteLine(e.Message);
+                Console.WriteLine("Failed to get data from Big Query");
             }
         }
 
@@ -219,15 +193,11 @@ namespace SelfRegi_V2
                 pictureBox.Load("noimage.png");
                 barcode_state = false;
                 Session.image_sub = "isbn=";
-                //Session.product = new ProductData();
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.image_api);
-                //api_client.DefaultRequestHeaders.Add("Authorization", Session.haravan_key_name + " " + Session.haravan_key_pass);
 
                 var builder = new UriBuilder(Session.image_api);
-
-                //builder.Query = Session.haravan_sub + Session.barcode;
-                builder.Query = Session.image_sub + Session.barcode;
+                builder.Query = Session.image_sub + Session.product.isbn;
                 var url = builder.ToString();
                 var res = await api_client.GetAsync(url);
 
@@ -235,11 +205,8 @@ namespace SelfRegi_V2
 
 
                 // Extract value from response data
-
                 JArray jsonArray = JArray.Parse(content);
                 dynamic data = JObject.Parse(jsonArray[0].ToString());
-
-
 
                 if (content != "")
                 {
@@ -250,7 +217,6 @@ namespace SelfRegi_V2
                         api_message = "Received image from server successfully";
                         if (Session.product.isbn != "")
                         {
-                            //Console.WriteLine(Session.product.link_image);
                             pictureBox.LoadAsync(Session.product.link_image);
                         }
                         else
@@ -260,10 +226,10 @@ namespace SelfRegi_V2
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                api_message = "No image found";
-                Console.WriteLine(e);
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to get image\n";
+
             }
         }
 
@@ -281,7 +247,6 @@ namespace SelfRegi_V2
 
                 var builder = new UriBuilder(Session.image_api);
 
-                //builder.Query = Session.haravan_sub + Session.barcode;
                 builder.Query = Session.image_sub + isbn;
                 var url = builder.ToString();
                 var res = await api_client.GetAsync(url);
@@ -307,10 +272,9 @@ namespace SelfRegi_V2
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                api_message = "No image found";
-                Console.WriteLine(e);
+                Console.WriteLine("Failed to get image by ApiGetImageByISBN");
             }
         }
 
@@ -322,7 +286,6 @@ namespace SelfRegi_V2
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
                 foreach (var key in Session.productPos.Keys)
                 {
                     string json = System.Text.Json.JsonSerializer.Serialize(new
@@ -338,7 +301,6 @@ namespace SelfRegi_V2
                         dpp_shelf_name = Session.productPos[key].shelf_name
                     });
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    Console.WriteLine("======>" + content);
                     var result = await api_client.PostAsync(Session.sub_set_smart_self_setting, content);
 
                     if (result.IsSuccessStatusCode)
@@ -354,11 +316,12 @@ namespace SelfRegi_V2
                     {
                         Console.WriteLine(result);
 
-                        Console.WriteLine("Connect to API Server Failed.");
+                        Console.WriteLine("Failed to get Smart Self setting");
                     }
                 }
+                
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
             }
@@ -379,10 +342,9 @@ namespace SelfRegi_V2
                     string json = System.Text.Json.JsonSerializer.Serialize(new
                     {
                         api_key = Session.bquery_key,
-                        dpp_shelf_name = "SHELF 1"
+                        dpp_shelf_name = txtShelf.Text
                     });
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    Console.WriteLine("======>" + content);
                     var result = await api_client.PostAsync(Session.sub_get_smart_self_setting, content);
 
                     if (result.IsSuccessStatusCode)
@@ -410,7 +372,6 @@ namespace SelfRegi_V2
 
                         string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
                         Session.productPos[name] = data;
-                        Console.WriteLine(name);
                     }
                     //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == 1 && x.Value.row == 1).Key;
 
@@ -428,9 +389,9 @@ namespace SelfRegi_V2
                     }
                 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to  get Smart Self setting \n";
             }
 
         }
@@ -469,7 +430,6 @@ namespace SelfRegi_V2
                     Session.barcode = (string)data["data"][0]["jancode_1"];
                     Console.WriteLine(Session.barcode);
                 }
-
                 
                 else
                 {
@@ -477,9 +437,9 @@ namespace SelfRegi_V2
                     Console.WriteLine("Connect to API Server Failed.");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to call api RFID to Jan \n";
             }
         }
 
@@ -492,113 +452,6 @@ namespace SelfRegi_V2
             HttpResponseMessage response = await api_client.GetAsync(new Uri(Session.sync_api + Session.sync_sub));
 
             return response.StatusCode;
-        }
-
-        public void ToCSV()
-        {
-            StreamWriter sw = new StreamWriter(Session.path, false, Encoding.GetEncoding(932));
-            //StreamWriter sw = new StreamWriter("test.csv", false, Encoding.GetEncoding(932));
-            //headers    
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                string name = dt.Columns[i].ColumnName.Contains("Column") ? "" : dt.Columns[i].ColumnName;
-                sw.Write(name);
-                if (i < dt.Columns.Count - 1)
-                {
-                    sw.Write(",");
-                }
-            }
-            sw.Write(sw.NewLine);
-            foreach (DataRow dr in dt.Rows)
-            {
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (!Convert.IsDBNull(dr[i]))
-                    {
-                        string value = dr[i].ToString();
-                        if (value.Contains(','))
-                        {
-                            value = String.Format("\"{0}\"", value);
-                            sw.Write(value);
-                        }
-                        else
-                        {
-                            sw.Write(dr[i].ToString());
-                        }
-                    }
-                    if (i < dt.Columns.Count - 1)
-                    {
-                        sw.Write(",");
-                    }
-                }
-                sw.Write(sw.NewLine);
-            }
-            sw.Close();
-        }
-
-        //public void updateCSVShopDB()
-        //{
-
-        //    //dt = ReadCsvFile(Session.path);
-        //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //    //Console.WriteLine(dt.Columns[1].ColumnName+"Name");
-        //    foreach (DataColumn dc in dt.Columns)
-        //    {
-        //        sb.Append(dc.ColumnName);
-        //        sb.Append(",");
-        //    }
-        //    sb.Remove(sb.Length - 1, 1);
-        //    //sb.AppendLine();
-        //    foreach (DataRow r in dt.Rows)
-        //    {
-        //        if (r.ItemArray[0].ToString() != Session.barcode)
-        //        {
-        //            for (int i = 0; i < dt.Columns.Count; i++)
-        //            {
-        //                sb.Append(r.ItemArray[i].ToString());
-        //                sb.Append(",");
-        //            }
-        //        }
-        //        sb.Remove(sb.Length - 1, 1);
-        //    }
-        //    //string product_update = Session.barcode + ",," + Session.product.goods_name + "," + Session.product.tax_type + "," + Session.product.cost_price + ",0," + Session.product.media_cd + ",1";
-        //    //Console.WriteLine(product_update);
-        //    //sb.AppendLine(product_update);
-        //    System.IO.File.WriteAllText("test.csv", sb.ToString(),Encoding.GetEncoding(932));
-        //}
-
-        public DataTable ReadCsvFile(string csvfilepath)
-        {
-            DataTable dtCsv = new DataTable();
-            var text = File.ReadAllText(csvfilepath, Encoding.GetEncoding(932));
-            text = text.Replace("\n", "");
-            string[] rows = text.Split('\r'); //split full file text into rows  
-            for (int i = 0; i < rows.Count() - 1; i++)
-            {
-                string[] rowValues = rows[i].Split(','); //split each row with comma to get individual values  
-                {
-                    if (i == 0)
-                    {
-                        for (int j = 0; j < rowValues.Count(); j++)
-                        {
-                            dtCsv.Columns.Add(rowValues[j]); //add headers  
-                        }
-                    }
-                    else
-                    {
-                        DataRow dr = dtCsv.NewRow();
-                        for (int k = 0; k < rowValues.Count(); k++)
-                        {
-                            dr[k] = rowValues[k].ToString();
-                        }
-                        dtCsv.Rows.Add(dr); //add other rows  
-                        //Console.WriteLine("====> Row csv: " + dr.ItemArray[0]);
-                    }
-                    // }
-                }
-            }
-
-            return dtCsv;
         }
 
         private Dictionary<string, string> getDictionaryConfig(string path)
@@ -653,17 +506,6 @@ namespace SelfRegi_V2
 
         }
 
-        private int isLocal()
-        {
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                if (dt.Rows[i][0].ToString().Equals(Session.barcode))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
 
 
         public string rfid_cd;
@@ -677,20 +519,14 @@ namespace SelfRegi_V2
                 rfid_reading = false;
 
                 Wait wait = new Wait();
+
+                //Clear after test
                 wait.Visible = true;
                 Task.Run(() => ApiRFIDtoJan()).Wait();
                 Task.Run(() => ApiGetDataFromBQ()).Wait();
                 wait.Visible = false;
                 Task.Run(() => ApiGetImage()).Wait();
-
-                //Clear after test
-                rfid_cd = "E280689400005017E3139C39";
-                Session.rfidcode = "E280689400005017E3139C39";
                 updateView();
-                //End clear
-
-
-
 
 
 
@@ -699,78 +535,6 @@ namespace SelfRegi_V2
 
                     rfid_cd = Session.rfidcode;
                     jan_cd = Session.barcode;
-
-
-
-
-                    switch (api_status)
-                    {
-                        case "00":
-
-
-                            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Received Data from API.\n";
-                            int res = isLocal();
-                            if (res != -1)
-                            {
-                                //updateView();
-
-
-                                dt.Rows[res]["gdm_media_name"] = Session.product.goods_name;
-                                dt.Rows[res]["gds_tax_type"] = "1";
-                                dt.Rows[res]["Column2"] = Session.product.price_intax;
-                                dt.Rows[res]["Column3"] = "0";
-                                dt.Rows[res]["gdm_media_cd"] = Session.product.media_cd;
-                                dt.Rows[res][7] = "1";
-                                //updateCSVShopDB();
-                                //Console.WriteLine("======= Is in Localdb");
-                                ToCSV();
-                                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Updated LocalDB.\n";
-
-                                wait.Visible = true;
-                                //Task.Run(() => ApiSend()).Wait();
-                                wait.Visible = false;
-
-                                //Task.Run(() => ApiSend()).Wait();
-
-
-                                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss: ") + api_message + "\n";
-                                api_message = "";
-                                barcode_state = true;
-                            }
-                            else
-                            {
-                                if (rfid_cd != "")
-                                // if (!Session.rfidcode.Equals(""))
-                                {
-                                    //Console.WriteLine(dt.Rows[0][7]);
-
-                                    wait.Visible = true;
-                                    //Task.Run(() => ApiSend()).Wait();
-                                    wait.Visible = false;
-
-                                    //Task.Run(() => ApiSend()).Wait();
-
-
-                                    //Thread.Sleep(1000);
-
-                                    richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": " + api_message + "\n";
-                                    api_message = "";
-                                    // dt.Rows.Add(Session.barcode, Session.product.goods_name_kana, Session.product.goods_name, "1", Session.product.price_intax, "0", Session.product.media_cd, "1");
-                                    dt.Rows.Add(jan_cd, Session.product.goods_name_kana, Session.product.goods_name, "1", Session.product.price_intax, "0", Session.product.media_cd, "1");
-                                    //updateCSVShopDB();
-                                    Console.WriteLine("======= Is not in Localdb");
-                                    ToCSV();
-                                    richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Added new Item to LocalDB\n";
-                                    barcode_state = true;
-                                }
-                            }
-                            updateView();
-
-                            break;
-                        default:
-                            break;
-                    }
-
 
                 }
                 rfid_reading = true;
@@ -893,7 +657,12 @@ namespace SelfRegi_V2
 
         private void txtRfid_TextChanged(object sender, EventArgs e)
         {
-
+        //Wait wait = new Wait();
+        //wait.Visible = true;
+        //Task.Run(() => ApiRFIDtoJan()).Wait();
+        //Task.Run(() => ApiGetDataFromBQ()).Wait();
+        //wait.Visible = false;
+        //Task.Run(() => ApiGetImage()).Wait();
         }
 
         private void txtJan_TextChanged(object sender, EventArgs e)
@@ -1111,9 +880,7 @@ namespace SelfRegi_V2
                 if (Session.OPOSRFID1.TagCount > 0)
                 {
 
-                    //Console.WriteLine("==========> TAGCOUNT Before clear: " + Session.OPOSRFID1.TagCount);
                     Session.OPOSRFID1.ClearInputProperties();
-                    //Console.WriteLine("==========> TAGCOUNT After clear: " + Session.OPOSRFID1.TagCount);
                 }
 
                 PhaseChange(OPOSRFID1);
@@ -1191,68 +958,7 @@ namespace SelfRegi_V2
 
             public void OPOS_Connector(AxOPOSRFID OPOSRFID1)
             {
-                //string CurrentTagID;
-                //int TagCount;
-                //int LoopCnt;
-                //string UserData;
                 OPOS_EnableDevice(OPOSRFID1);
-
-                //if (Session.StateCurr == 1)
-                //{
-                //   // Session.rfid_code.Clear();
-                //    if (Session.isReading)
-                //    {
-                //        OPOS_StopReading(OPOSRFID1);
-                //    }
-                //    else
-                //    {
-                //        OPOS_EnableDevice(OPOSRFID1);
-                //    }
-
-                //}
-
-                //OPOS_StartReading(OPOSRFID1);
-                //OPOSRFID1.ReadTimerInterval = 400;
-
-                //if (OPOSRFID1.TagCount > 0)
-                //{
-
-                //    Console.WriteLine("==========> TAGCOUNT Before clear: " + OPOSRFID1.TagCount);
-                //    OPOSRFID1.ClearInputProperties();
-                //    Console.WriteLine(OPOSRFID1.ClearInputProperties());
-                //    Console.WriteLine("==========> TAGCOUNT After clear: " + OPOSRFID1.TagCount);
-                //}
-
-                //while (Session.isReading)
-                //{
-                //    //Thread.Sleep(500);
-                //    OPOSRFID1.DataEventEnabled = true;
-                //    TagCount = OPOSRFID1.TagCount;
-                //    for (int i = 0; i < TagCount; i++)
-                //    {
-                //        //var code_value = OPOSRFID1.CurrentTagID;
-                //        UserData = " Userdata=" + OPOSRFID1.CurrentTagUserData;
-
-                //        if (UserData == " Userdata=")
-                //        {
-                //            UserData = "";
-                //        }
-                //        var code_value = OPOSRFID1.CurrentTagID + UserData;
-                //        OPOSRFID1.NextTag();
-                //        //Console.WriteLine(code_value +"\n");
-                //        if (!Session.rfid_code.Contains(code_value))
-                //        {
-                //            Session.rfid_code.Add(code_value);
-                //            string new_code = ConvertTagIDCode(code_value);
-                //            RFIDtoJAN(api_client, new_code, sub_wm);
-
-                //            Thread.Sleep(500);
-                //            //WindowAPI.PostMessage(sub_wm, (uint)Session.WM_KEYDOWN, (int)(System.Enum.Parse(typeof(Session.Keys), "Return")), (int)(0));
-                //        }
-                //    }
-                //    OPOSRFID1.DataEventEnabled = true;
-                //}
-                //OPOS_StopReading(OPOSRFID1);
             }
 
 
@@ -1261,9 +967,6 @@ namespace SelfRegi_V2
             private void InitializeComponent()
             {
                 this.SuspendLayout();
-                // 
-                // OPOS
-                // 
                 this.Name = "OPOS";
                 this.Load += new System.EventHandler(this.OPOS_Load);
                 this.ResumeLayout(false);
@@ -1287,44 +990,7 @@ namespace SelfRegi_V2
                 }
             }
 
-            //private void axOPOSRFID1_DataEvent(object sender, AxOPOSRFIDLib._DOPOSRFIDEvents_DataEventEvent e)
-            //{
-            //    string CurrentTagID;
-            //    int TagCount;
-            //    int LoopCnt;
-            //    string UserData;
-
-            //    // TagCount
-            //    TagCount = Session.OPOSRFID1.TagCount;
-
-            //    var loopTo = TagCount;
-            //    TagCount = Session.OPOSRFID1.TagCount;
-            //    for (int i = 0; i < TagCount; i++)
-            //    {
-            //        //var code_value = OPOSRFID1.CurrentTagID;
-            //        UserData = " Userdata=" + Session.OPOSRFID1.CurrentTagUserData;
-
-            //        if (UserData == " Userdata=")
-            //        {
-            //            UserData = "";
-            //        }
-            //        var code_value = Session.OPOSRFID1.CurrentTagID + UserData;
-            //        Session.OPOSRFID1.NextTag();
-            //        //Console.WriteLine("DataEvent " + code_value + "\n");
-            //        //if (!Session.rfid_code.Contains(code_value))
-            //        //{
-            //        //    Session.rfid_code.Add(code_value);
-            //        //    string new_code = ConvertTagIDCode(code_value);
-            //        //    RFIDtoJAN(api_client, new_code, sub_wm);
-
-            //        //    Thread.Sleep(500);
-            //        //WindowAPI.PostMessage(sub_wm, (uint)Session.WM_KEYDOWN, (int)(System.Enum.Parse(typeof(Session.Keys), "Return")), (int)(0));
-            //        //}
-            //    }
-
-            //    // DataEventEnabled=True for next DataEvent
-            //    Session.OPOSRFID1.DataEventEnabled = true;
-            //}
+         
 
 
         }
@@ -3371,7 +3037,7 @@ namespace SelfRegi_V2
                 shelf_col_pos = Session.positionPos[choosingImage.Name].col.ToString(), //choosingImage.Name.Substring(11, 1),
                 shelf_pos = Session.positionPos[choosingImage.Name].row.ToString(),
                 product_name = Session.product.goods_name,
-                shelf_name = txtSelf.Text,
+                shelf_name = txtShelf.Text,
                 isbn = Session.product.isbn
             };
             
@@ -3387,9 +3053,6 @@ namespace SelfRegi_V2
 
                         //ProductPos x = Session.productPos[" "];
                         //Console.WriteLine(x.RFIDcode);
-
-                     
-
                     }
                     else
                     {
@@ -3480,7 +3143,7 @@ namespace SelfRegi_V2
 
         }
 
-        private void txtSelf_TextChanged(object sender, EventArgs e)
+        private void txtShelf_TextChanged(object sender, EventArgs e)
         {
 
         }
@@ -3490,41 +3153,40 @@ namespace SelfRegi_V2
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnLoad_Click(object sender, EventArgs e)
         {
-            Task.Run(() => ApiGetSmartSelfSetting()).Wait();
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
+            
+                Task.Run(() => ApiGetSmartSelfSetting()).Wait();
+                //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
 
-            foreach (var Image_Items in ImageLayer.Controls)
-            {
-                PictureBox pic = Image_Items as PictureBox;
-                pic.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                if (Session.productPos.Keys.Contains(pic.Name))
+                foreach (var Image_Items in ImageLayer.Controls)
                 {
-                    //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
-                    //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
-                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+                    PictureBox pic = Image_Items as PictureBox;
+                    pic.SizeMode = PictureBoxSizeMode.StretchImage;
 
-                    Task.Run(() => ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
-                    if (Session.product.link_image == "")
+                    if (Session.productPos.Keys.Contains(pic.Name))
                     {
-                        pic.Load("noimage.png");
+                        //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
+                        //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
+                        //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+
+                        Task.Run(() => ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
+                        if (Session.product.link_image == "")
+                        {
+                            pic.Load("noimage.png");
+                        }
+                        else
+                        {
+                            pic.Load(Session.product.link_image);
+                        }
+
                     }
-                    else
-                    {
-                        pic.Load(Session.product.link_image);
-                    }
-                    //Console.WriteLine(Session.product.link_image);
                 }
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
+
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
+
+                //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
+
             }
-
-            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
-
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
-
         }
     }
-}

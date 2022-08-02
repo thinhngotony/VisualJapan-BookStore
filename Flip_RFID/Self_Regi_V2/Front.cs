@@ -30,6 +30,7 @@ namespace SelfRegi_V2
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
             this.CenterToScreen();
+
             init();
             Session.front = this;
             txtRfid.Text = Session.rfidcode;
@@ -108,7 +109,7 @@ namespace SelfRegi_V2
                 Session.rfidcode = "";
                 txtRfid.Text = "";
                 txtJan.Text = "";
-
+                pictureBox.Load("noimage.png");
                 foreach (var Image_Items in ImageLayer.Controls)
                 {
                     PictureBox pic = Image_Items as PictureBox;
@@ -357,10 +358,9 @@ namespace SelfRegi_V2
                 }
                 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Failed to set Smart Self setting \n";
             }
 
         }
@@ -3170,8 +3170,12 @@ namespace SelfRegi_V2
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
+
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).RFIDcode));
+            Wait wait = new Wait();
+            wait.Visible = true;
             Task.Run(() => ApiSetSmartSelfSetting()).Wait();
+            wait.Visible = false;
             resetLabel(1);
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
 
@@ -3192,6 +3196,9 @@ namespace SelfRegi_V2
         {
 
                 resetLabel(1);
+                Wait wait = new Wait();
+                wait.Visible = true;
+
                 //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
                 Task.Run(() => ApiGetSmartSelfSetting()).Wait();
                 foreach (var Image_Items in ImageLayer.Controls)
@@ -3218,6 +3225,7 @@ namespace SelfRegi_V2
 
                     }
                 }
+                wait.Visible = false;
 
                 richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
                 //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));

@@ -579,6 +579,7 @@ namespace SelfRegi_V2
             this.pictureBox.TabIndex = 56;
             this.pictureBox.TabStop = false;
             this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click_2);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // btnLoad
             // 

@@ -102,7 +102,7 @@ namespace SelfRegi_V2
             // 
             this.lJan.AutoSize = true;
             this.lJan.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
-            this.lJan.Location = new System.Drawing.Point(1336, 206);
+            this.lJan.Location = new System.Drawing.Point(1333, 177);
             this.lJan.Name = "lJan";
             this.lJan.Size = new System.Drawing.Size(85, 25);
             this.lJan.TabIndex = 7;
@@ -114,7 +114,7 @@ namespace SelfRegi_V2
             this.txtJan.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtJan.Enabled = false;
             this.txtJan.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txtJan.Location = new System.Drawing.Point(1334, 234);
+            this.txtJan.Location = new System.Drawing.Point(1334, 205);
             this.txtJan.Name = "txtJan";
             this.txtJan.ReadOnly = true;
             this.txtJan.Size = new System.Drawing.Size(254, 25);
@@ -125,7 +125,7 @@ namespace SelfRegi_V2
             // 
             this.lRfid.AutoSize = true;
             this.lRfid.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
-            this.lRfid.Location = new System.Drawing.Point(1336, 150);
+            this.lRfid.Location = new System.Drawing.Point(1333, 121);
             this.lRfid.Name = "lRfid";
             this.lRfid.Size = new System.Drawing.Size(52, 25);
             this.lRfid.TabIndex = 5;
@@ -138,7 +138,7 @@ namespace SelfRegi_V2
             this.txtRfid.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtRfid.Enabled = false;
             this.txtRfid.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txtRfid.Location = new System.Drawing.Point(1334, 178);
+            this.txtRfid.Location = new System.Drawing.Point(1334, 149);
             this.txtRfid.Name = "txtRfid";
             this.txtRfid.ReadOnly = true;
             this.txtRfid.Size = new System.Drawing.Size(254, 25);
@@ -197,7 +197,7 @@ namespace SelfRegi_V2
             // 
             this.btnExit.BackColor = System.Drawing.Color.Peru;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExit.Location = new System.Drawing.Point(1561, 2);
+            this.btnExit.Location = new System.Drawing.Point(1563, -2);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(37, 36);
             this.btnExit.TabIndex = 13;
@@ -519,7 +519,7 @@ namespace SelfRegi_V2
             this.txtShelf.AcceptsTab = true;
             this.txtShelf.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtShelf.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txtShelf.Location = new System.Drawing.Point(1334, 109);
+            this.txtShelf.Location = new System.Drawing.Point(1334, 93);
             this.txtShelf.Name = "txtShelf";
             this.txtShelf.Size = new System.Drawing.Size(254, 25);
             this.txtShelf.TabIndex = 57;
@@ -530,7 +530,7 @@ namespace SelfRegi_V2
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(1333, 81);
+            this.label1.Location = new System.Drawing.Point(1333, 65);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 25);
             this.label1.TabIndex = 58;
@@ -541,7 +541,7 @@ namespace SelfRegi_V2
             this.txtScanner.AcceptsTab = true;
             this.txtScanner.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtScanner.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txtScanner.Location = new System.Drawing.Point(1334, 44);
+            this.txtScanner.Location = new System.Drawing.Point(1334, 37);
             this.txtScanner.Name = "txtScanner";
             this.txtScanner.Size = new System.Drawing.Size(254, 25);
             this.txtScanner.TabIndex = 59;
@@ -552,7 +552,7 @@ namespace SelfRegi_V2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(1329, 13);
+            this.label2.Location = new System.Drawing.Point(1329, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 25);
             this.label2.TabIndex = 60;
@@ -573,13 +573,13 @@ namespace SelfRegi_V2
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(1338, 280);
+            this.pictureBox.Location = new System.Drawing.Point(1334, 280);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(250, 300);
+            this.pictureBox.Size = new System.Drawing.Size(254, 300);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox.TabIndex = 56;
             this.pictureBox.TabStop = false;
             this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click_2);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             // 
             // btnLoad
             // 

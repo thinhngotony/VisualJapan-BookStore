@@ -229,7 +229,7 @@ namespace SelfRegi_V2
             }
             catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + "Failed to get image\n";
+                Console.WriteLine("Failed to get image \n");
 
             }
         }
@@ -352,7 +352,7 @@ namespace SelfRegi_V2
                     else
                     {
                         Console.WriteLine(result);
-                        Console.WriteLine("Failed to set Smart Self setting");
+
                     }
 
                 }
@@ -360,7 +360,7 @@ namespace SelfRegi_V2
             }
             catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Failed to set Smart Self setting \n";
+                Console.WriteLine("Failed to set Smart Self setting");
             }
 
         }
@@ -420,13 +420,13 @@ namespace SelfRegi_V2
                     {
                         Console.WriteLine(result);
 
-                        Console.WriteLine("Connect to API Server Failed.");
+                        
                     }
                 
             }
             catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to  get Smart Self setting \n";
+                Console.WriteLine("Failed to  get Smart Self setting \n");
             }
 
         }
@@ -469,12 +469,12 @@ namespace SelfRegi_V2
                 else
                 {
                     Console.WriteLine(result);
-                    Console.WriteLine("Connect to API Server Failed.");
+
                 }
             }
             catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to call api RFID to Jan \n";
+                Console.WriteLine("Connect to API Server Failed.");
             }
         }
 
@@ -556,12 +556,12 @@ namespace SelfRegi_V2
                 Wait wait = new Wait();
 
                 //Clear after test
-                wait.Visible = true;
-                Task.Run(() => ApiRFIDtoJan()).Wait();
-                Task.Run(() => ApiGetDataFromBQ()).Wait();
-                wait.Visible = false;
-                Task.Run(() => ApiGetImage()).Wait();
-                updateView();
+                //wait.Visible = true;
+                //Task.Run(() => ApiRFIDtoJan()).Wait();
+                //Task.Run(() => ApiGetDataFromBQ()).Wait();
+                //wait.Visible = false;
+                //Task.Run(() => ApiGetImage()).Wait();
+                //updateView();
 
 
 
@@ -670,10 +670,6 @@ namespace SelfRegi_V2
 
 
 
-
-        //New
-
-
         private void txtCCode_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
@@ -692,12 +688,12 @@ namespace SelfRegi_V2
 
         private void txtRfid_TextChanged(object sender, EventArgs e)
         {
-        //Wait wait = new Wait();
-        //wait.Visible = true;
-        //Task.Run(() => ApiRFIDtoJan()).Wait();
-        //Task.Run(() => ApiGetDataFromBQ()).Wait();
-        //wait.Visible = false;
-        //Task.Run(() => ApiGetImage()).Wait();
+            Wait wait = new Wait();
+            wait.Visible = true;
+            Task.Run(() => ApiRFIDtoJan()).Wait();
+            Task.Run(() => ApiGetDataFromBQ()).Wait();
+            wait.Visible = false;
+            Task.Run(() => ApiGetImage()).Wait();
         }
 
         private void txtJan_TextChanged(object sender, EventArgs e)

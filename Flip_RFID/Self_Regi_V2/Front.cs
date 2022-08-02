@@ -285,22 +285,57 @@ namespace SelfRegi_V2
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                foreach (var key in Session.productPos.Keys) 
-                //foreach (PictureBox key in ImageLayer.Controls) 
-                {
-                    string json = System.Text.Json.JsonSerializer.Serialize(new
+
+                string json = "";
+                foreach (PictureBox pic in ImageLayer.Controls) {
+                    if (Session.productPos.Keys.Contains(pic.Name)) {
+                        json = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            api_key = Session.bquery_key,
+                            dpp_shelf_pos = Int32.Parse(Session.productPos[pic.Name].shelf_pos),
+                            dpp_shelf_col_pos = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos),
+                            dpp_jan_cd = Session.productPos[pic.Name].Jancode,
+                            dpp_rfid_cd = Session.productPos[pic.Name].RFIDcode,
+                            dpp_isbn = Session.productPos[pic.Name].isbn,
+                            dpp_product_name = Session.productPos[pic.Name].product_name,
+                            dpp_scaner_name = txtScanner.Text,
+                            dpp_shelf_name = txtShelf.Text
+                        }
+                        );
+                    } else
                     {
-                        api_key = Session.bquery_key,
-                        dpp_shelf_pos = Int32.Parse(Session.productPos[key].shelf_pos),
-                        dpp_shelf_col_pos = Int32.Parse(Session.productPos[key].shelf_col_pos),
-                        dpp_jan_cd = Session.productPos[key].Jancode,
-                        dpp_rfid_cd = Session.productPos[key].RFIDcode,
-                        dpp_isbn = Session.productPos[key].isbn,
-                        dpp_product_name = Session.productPos[key].product_name,
-                        dpp_scaner_name = txtScanner.Text,
-                        dpp_shelf_name = Session.productPos[key].shelf_name
-                    });
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        json = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            api_key = Session.bquery_key,
+                            dpp_shelf_pos = Int32.Parse(pic.Name.Substring(11, 1)),
+                            dpp_shelf_col_pos = Int32.Parse(pic.Name.Substring(13, 1)),
+                            dpp_jan_cd = "",
+                            dpp_rfid_cd = "",
+                            dpp_isbn = "",
+                            dpp_product_name = "",
+                            dpp_scaner_name = txtScanner.Text,
+                            dpp_shelf_name = txtShelf.Text
+                        });
+                    }
+
+                //foreach (var key in Session.productPos.Keys) 
+                //{
+                //    string json = System.Text.Json.JsonSerializer.Serialize(new
+                //    {
+                //        api_key = Session.bquery_key,
+                //        dpp_shelf_pos = Int32.Parse(Session.productPos[key].shelf_pos),
+                //        dpp_shelf_col_pos = Int32.Parse(Session.productPos[key].shelf_col_pos),
+                //        dpp_jan_cd = Session.productPos[key].Jancode,
+                //        dpp_rfid_cd = Session.productPos[key].RFIDcode,
+                //        dpp_isbn = Session.productPos[key].isbn,
+                //        dpp_product_name = Session.productPos[key].product_name,
+                //        dpp_scaner_name = txtScanner.Text,
+                //        dpp_shelf_name = Session.productPos[key].shelf_name
+                //    });
+
+
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
                     var result = await api_client.PostAsync(Session.sub_set_smart_self_setting, content);
 
 
@@ -3178,6 +3213,7 @@ namespace SelfRegi_V2
                         else
                         {
                             pic.Load(Session.product.link_image);
+                            Session.product.link_image = "";
                         }
 
                     }

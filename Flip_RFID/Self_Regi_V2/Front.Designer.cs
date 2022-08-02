@@ -136,6 +136,7 @@ namespace SelfRegi_V2
             // 
             this.txtRfid.AcceptsTab = true;
             this.txtRfid.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtRfid.Enabled = false;
             this.txtRfid.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtRfid.Location = new System.Drawing.Point(1334, 178);
             this.txtRfid.Name = "txtRfid";
@@ -158,7 +159,7 @@ namespace SelfRegi_V2
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.richTextBox1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.Location = new System.Drawing.Point(1338, 763);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
@@ -522,6 +523,7 @@ namespace SelfRegi_V2
             this.txtShelf.Name = "txtShelf";
             this.txtShelf.Size = new System.Drawing.Size(254, 25);
             this.txtShelf.TabIndex = 57;
+            this.txtShelf.Text = "SHELF 1";
             this.txtShelf.TextChanged += new System.EventHandler(this.txtShelf_TextChanged);
             // 
             // label1
@@ -541,7 +543,6 @@ namespace SelfRegi_V2
             this.txtScanner.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtScanner.Location = new System.Drawing.Point(1334, 44);
             this.txtScanner.Name = "txtScanner";
-            this.txtScanner.ReadOnly = true;
             this.txtScanner.Size = new System.Drawing.Size(254, 25);
             this.txtScanner.TabIndex = 59;
             this.txtScanner.Text = " ";

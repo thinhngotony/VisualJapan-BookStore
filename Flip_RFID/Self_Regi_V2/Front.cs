@@ -79,16 +79,8 @@ namespace SelfRegi_V2
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);// them bien rT vo GLobal
             Session.JanLen = (int)Int64.Parse(dataInFile["JanLen"]);
             Session.scanner_name = dataInFile["device_name"];
+            resetLabel(1);
 
-            foreach (var Image_Items in ImageLayer.Controls)
-            {
-                PictureBox pic = Image_Items as PictureBox;
-                pic.SizeMode = PictureBoxSizeMode.StretchImage;
-                pic.Load("noimage.png");
-
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(11, 1));
-                //Console.WriteLine((Image_Items as PictureBox).Name.Substring(13, 1));
-            }
         }
 
 
@@ -111,10 +103,19 @@ namespace SelfRegi_V2
             if (mode == 1)
             {
                 Session.product = new ProductData();
+                Session.productPos = new Dictionary<string, ProductPos>();
                 Session.barcode = "";
                 Session.rfidcode = "";
                 txtRfid.Text = "";
                 txtJan.Text = "";
+
+                foreach (var Image_Items in ImageLayer.Controls)
+                {
+                    PictureBox pic = Image_Items as PictureBox;
+                    pic.SizeMode = PictureBoxSizeMode.StretchImage;
+                    pic.Load("noimage.png");
+                }
+
             }
         }
 
@@ -214,7 +215,6 @@ namespace SelfRegi_V2
                     {
                         Session.product.link_image = data.summary.cover;
                         // Displayed in the user interface
-                        api_message = "Received image from server successfully";
                         if (Session.product.isbn != "")
                         {
                             pictureBox.LoadAsync(Session.product.link_image);
@@ -228,7 +228,7 @@ namespace SelfRegi_V2
             }
             catch (Exception)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Failed to get image\n";
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + "Failed to get image\n";
 
             }
         }
@@ -266,7 +266,6 @@ namespace SelfRegi_V2
                     {
                         Session.product.link_image = data.summary.cover;
                         // Displayed in the user interface
-                        api_message = "Received image from server successfully";
                         pictureBox.Load("noimage.png");
                         
                     }
@@ -286,7 +285,8 @@ namespace SelfRegi_V2
                 HttpClient api_client = new HttpClient();
                 api_client.BaseAddress = new Uri(Session.address_api);
                 api_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                foreach (var key in Session.productPos.Keys)
+                foreach (var key in Session.productPos.Keys) 
+                //foreach (PictureBox key in ImageLayer.Controls) 
                 {
                     string json = System.Text.Json.JsonSerializer.Serialize(new
                     {
@@ -303,6 +303,7 @@ namespace SelfRegi_V2
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     var result = await api_client.PostAsync(Session.sub_set_smart_self_setting, content);
 
+
                     if (result.IsSuccessStatusCode)
                     {
 
@@ -315,15 +316,16 @@ namespace SelfRegi_V2
                     else
                     {
                         Console.WriteLine(result);
-
-                        Console.WriteLine("Failed to get Smart Self setting");
+                        Console.WriteLine("Failed to set Smart Self setting");
                     }
+
                 }
                 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
+                Console.WriteLine(e);
+                //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + "Connect to API failed \n";
             }
 
         }
@@ -374,11 +376,9 @@ namespace SelfRegi_V2
                         Session.productPos[name] = data;
                     }
                     //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == 1 && x.Value.row == 1).Key;
-
-
                     //Session.productPos. = (string)data["data"]["dpp_shelf_pos"];
 
-                    api_message = (string)JsonData["message"];
+                        api_message = (string)JsonData["message"];
                         api_status = (string)JsonData["code"];
                     }
                     else
@@ -3137,8 +3137,8 @@ namespace SelfRegi_V2
         {
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).RFIDcode));
             Task.Run(() => ApiSetSmartSelfSetting()).Wait();
-
-
+            resetLabel(1);
+            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
 
 
         }
@@ -3155,10 +3155,10 @@ namespace SelfRegi_V2
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            
-                Task.Run(() => ApiGetSmartSelfSetting()).Wait();
-                //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
 
+                resetLabel(1);
+                //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + (Session.productPos[x] as ProductPos).isbn));
+                Task.Run(() => ApiGetSmartSelfSetting()).Wait();
                 foreach (var Image_Items in ImageLayer.Controls)
                 {
                     PictureBox pic = Image_Items as PictureBox;
@@ -3184,7 +3184,6 @@ namespace SelfRegi_V2
                 }
 
                 richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
-
                 //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
             }

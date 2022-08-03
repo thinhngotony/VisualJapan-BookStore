@@ -192,7 +192,7 @@ namespace SelfRegi_V2
         {
             try
             {
-                pictureBox.Load("noimage.png");
+                pictureBox.Load("blank_background.png");
                 barcode_state = false;
                 Session.image_sub = "isbn=";
                 HttpClient api_client = new HttpClient();
@@ -217,8 +217,19 @@ namespace SelfRegi_V2
                         Session.product.link_image = data.summary.cover;
                         // Displayed in the user interface
                         if (Session.product.isbn != "")
-                        {
+                        {    
                             pictureBox.LoadAsync(Session.product.link_image);
+                        }
+                        else
+                        {
+                            pictureBox.Load("noimage.png");
+                        }
+                    }
+                    else
+                    {
+                        if (Session.product.RFIDcode != "")
+                        {
+                            pictureBox.Load("blank_background.png");
                         }
                         else
                         {
@@ -238,7 +249,7 @@ namespace SelfRegi_V2
         {
             try
             {
-                pictureBox.Load("noimage.png");
+                pictureBox.Load("blank_background.png");
                 barcode_state = false;
                 Session.image_sub = "isbn=";
                 //Session.product = new ProductData();
@@ -3068,7 +3079,7 @@ namespace SelfRegi_V2
 
             PictureBox choosingImage = sender as PictureBox;
             ProductPos data = new ProductPos {
-                Jancode = txtJan.Text,
+                Jancode = Session.product.Jancode,
                 RFIDcode = txtRfid.Text,
                 shelf_col_pos = Session.positionPos[choosingImage.Name].col.ToString(), //choosingImage.Name.Substring(11, 1),
                 shelf_pos = Session.positionPos[choosingImage.Name].row.ToString(),
@@ -3087,8 +3098,27 @@ namespace SelfRegi_V2
                 if (choosingImage.ImageLocation == "blank_background.png") {
                     if (Session.product.link_image != "")
                     {
+                        //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+                        string pictureBoxDuplicateName = Session.productPos.FirstOrDefault(t => t.Value.RFIDcode == txtRfid.Text).Key;
+                        if (pictureBoxDuplicateName != null) {
+                            foreach (PictureBox t in ImageLayer.Controls)
+                            {
+                                if (t.Name == pictureBoxDuplicateName)
+                                {
+                                    t.Load("blank_background.png");
+                                    break;
+                                }
+                            }
+                            Session.productPos.Remove(pictureBoxDuplicateName);
+                            
+                        }
+
+                       
+
+
                         choosingImage.Load(Session.product.link_image);
-                        Session.productPos.Add(choosingImage.Name, data);
+                        //Session.productPos.Add(choosingImage.Name, data);
+                        Session.productPos[choosingImage.Name] = data;
                         //Session.productPos.Add(, data);
                         lastChoose = choosingImage;
 
@@ -3112,10 +3142,26 @@ namespace SelfRegi_V2
                     Session.productPos.Remove(lastChoose.Name);
                 }
 
+                string pictureBoxDuplicateName = Session.productPos.FirstOrDefault(t => t.Value.RFIDcode == txtRfid.Text).Key;
+                if (pictureBoxDuplicateName != null)
+                {
+                    foreach (PictureBox t in ImageLayer.Controls)
+                    {
+                        if (t.Name == pictureBoxDuplicateName)
+                        {
+                            t.Load("blank_background.png");
+                            break;
+                        }
+                    }
+                    Session.productPos.Remove(pictureBoxDuplicateName);
+
+                }
+
                 if (Session.product.link_image != "")
                 {
                     choosingImage.Load(Session.product.link_image);
-                    Session.productPos.Add(choosingImage.Name, data);
+                    //Session.productPos.Add(choosingImage.Name, data);
+                    Session.productPos[choosingImage.Name] = data;
                     lastChoose = choosingImage;
                 } else
                 {
@@ -3191,7 +3237,7 @@ namespace SelfRegi_V2
         private void btnRegister_Click(object sender, EventArgs e)
         {
 
-            Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).Jancode));
+            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).Jancode));
             Wait wait = new Wait();
             wait.Visible = true;
             Task.Run(() => ApiSetSmartSelfSetting()).Wait();
@@ -3228,21 +3274,24 @@ namespace SelfRegi_V2
 
                     if (Session.productPos.Keys.Contains(pic.Name))
                     {
-                        //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
-                        //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
-                        //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
+                    //int col = Int32.Parse(Session.productPos[pic.Name].shelf_col_pos);
+                    //int row = Int32.Parse(Session.productPos[pic.Name].shelf_pos);
+                    //string name = Session.positionPos.FirstOrDefault(x => x.Value.col == col && x.Value.row == row).Key;
 
                         Task.Run(() => ApiGetImageByISBN(Session.productPos[pic.Name].isbn)).Wait();
-                        if (Session.product.link_image == "")
+                        if (Session.product.link_image == "" && Session.productPos[pic.Name].RFIDcode != "")
                         {
                             pic.Load("noimage.png");
+                        }
+                        else if (Session.product.link_image == "" && Session.productPos[pic.Name].RFIDcode == "")
+                        {
+                            pic.Load("blank_background.png");
                         }
                         else
                         {
                             pic.Load(Session.product.link_image);
                             Session.product.link_image = "";
                         }
-
                     }
                 }
                 wait.Visible = false;

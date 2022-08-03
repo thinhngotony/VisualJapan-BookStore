@@ -695,6 +695,7 @@ namespace SelfRegi_V2
             Task.Run(() => ApiGetDataFromBQ()).Wait();
             wait.Visible = false;
             Task.Run(() => ApiGetImage()).Wait();
+            updateView();
             //opos.OPOS_StopReading(Session.OPOSRFID1);
             //btnConnect.Text = "StartReading";
             //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
@@ -3076,7 +3077,7 @@ namespace SelfRegi_V2
                 isbn = Session.product.isbn
             };
 
-            if (Session.product.link_image == "")
+            if (Session.product.link_image == "" && txtRfid.Text != "")
             {
                 Session.product.link_image = "noimage.png";
             }
@@ -3111,9 +3112,19 @@ namespace SelfRegi_V2
                     Session.productPos.Remove(lastChoose.Name);
                 }
 
-                choosingImage.Load(Session.product.link_image);
-                Session.productPos.Add(choosingImage.Name, data);
-                lastChoose = choosingImage;
+                if (Session.product.link_image != "")
+                {
+                    choosingImage.Load(Session.product.link_image);
+                    Session.productPos.Add(choosingImage.Name, data);
+                    lastChoose = choosingImage;
+                } else
+                {
+                    Console.WriteLine("Nothing to choose");
+                }
+
+                //choosingImage.Load(Session.product.link_image);
+                //Session.productPos.Add(choosingImage.Name, data);
+                //lastChoose = choosingImage;
 
                 //ProductPos x = Session.productPos[choosingImage.Name];
                 //Console.WriteLine(choosingImage.Name +" "+  x.RFIDcode);
@@ -3140,13 +3151,13 @@ namespace SelfRegi_V2
         private void pictureBox_DoubleClick(object sender, EventArgs e)
         {
             PictureBox deleteImage = sender as PictureBox;
-            if (deleteImage.ImageLocation != "noimage.png" && deleteImage.ImageLocation != "loading.gif")
+            if (deleteImage.ImageLocation != "blank_background.png" )
             {
                 DialogResult confirmResult = MessageBox.Show("Are you sure want to delete this", "Confirm Diaglog", MessageBoxButtons.YesNo,MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
 
                 if (confirmResult == DialogResult.Yes)
                 {
-                    deleteImage.Load("noimage.png");
+                    deleteImage.Load("blank_background.png");
                     Session.productPos.Remove(deleteImage.Name);
 
                     //ProductPos y = Session.productPos[deleteImage.Name];
@@ -3180,7 +3191,7 @@ namespace SelfRegi_V2
         private void btnRegister_Click(object sender, EventArgs e)
         {
 
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).RFIDcode));
+            Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).Jancode));
             Wait wait = new Wait();
             wait.Visible = true;
             Task.Run(() => ApiSetSmartSelfSetting()).Wait();

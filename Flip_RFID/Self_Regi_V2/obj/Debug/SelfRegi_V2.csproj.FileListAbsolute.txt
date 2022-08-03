@@ -266,3 +266,4 @@ C:\Users\Tony\Desktop\Flip\VisualJapan-BookStore\Flip_RFID\Self_Regi_V2\obj\Debu
 C:\Users\Tony\Desktop\Flip\VisualJapan-BookStore\Flip_RFID\Self_Regi_V2\obj\Debug\SelfRegi_V2.csproj.CopyComplete
 C:\Users\Tony\Desktop\Flip\VisualJapan-BookStore\Flip_RFID\Self_Regi_V2\obj\Debug\SelfRegi_V2.exe
 C:\Users\Tony\Desktop\Flip\VisualJapan-BookStore\Flip_RFID\Self_Regi_V2\obj\Debug\SelfRegi_V2.pdb
+C:\Users\Tony\Desktop\Flip\VisualJapan-BookStore\Flip_RFID\Self_Regi_V2\bin\Debug\blank_background.png

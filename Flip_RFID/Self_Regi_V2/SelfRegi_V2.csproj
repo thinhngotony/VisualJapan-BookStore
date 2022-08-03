@@ -150,6 +150,9 @@
     <None Include="bin\Debug\asterix-icon.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="blank_background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -109,12 +109,12 @@ namespace SelfRegi_V2
                 Session.rfidcode = "";
                 txtRfid.Text = "";
                 txtJan.Text = "";
-                pictureBox.Load("noimage.png");
+                pictureBox.Load("blank_background.png");
                 foreach (var Image_Items in ImageLayer.Controls)
                 {
                     PictureBox pic = Image_Items as PictureBox;
                     pic.SizeMode = PictureBoxSizeMode.StretchImage;
-                    pic.Load("noimage.png");
+                    pic.Load("blank_background.png");
                 }
 
             }
@@ -267,8 +267,9 @@ namespace SelfRegi_V2
                     {
                         Session.product.link_image = data.summary.cover;
                         // Displayed in the user interface
-                        pictureBox.Load("noimage.png");
-                        
+                    } else
+                    {
+                        pictureBox.Load( "noimage.png");
                     }
                 }
             }
@@ -694,6 +695,9 @@ namespace SelfRegi_V2
             Task.Run(() => ApiGetDataFromBQ()).Wait();
             wait.Visible = false;
             Task.Run(() => ApiGetImage()).Wait();
+            //opos.OPOS_StopReading(Session.OPOSRFID1);
+            //btnConnect.Text = "StartReading";
+            //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
         }
 
         private void txtJan_TextChanged(object sender, EventArgs e)
@@ -3071,10 +3075,15 @@ namespace SelfRegi_V2
                 shelf_name = txtShelf.Text,
                 isbn = Session.product.isbn
             };
-            
+
+            if (Session.product.link_image == "")
+            {
+                Session.product.link_image = "noimage.png";
+            }
+
             if (lastChoose == null)
             {
-                if (choosingImage.ImageLocation == "noimage.png") {
+                if (choosingImage.ImageLocation == "blank_background.png") {
                     if (Session.product.link_image != "")
                     {
                         choosingImage.Load(Session.product.link_image);
@@ -3088,16 +3097,20 @@ namespace SelfRegi_V2
                     else
                     {
                         Console.WriteLine("No image to show");
+                        lastChoose = choosingImage;
                     }
 
                 }
             }
-            else if (choosingImage.ImageLocation == "noimage.png")
+            else if (choosingImage.ImageLocation == "blank_background.png")
             {
-                if (lastChoose.ImageLocation == Session.product.link_image) {
-                    lastChoose.Load("noimage.png");
+                // Chỗ này không cho trùng ảnh 
+                if (lastChoose.ImageLocation == Session.product.link_image && Session.productPos[lastChoose.Name].RFIDcode == Session.rfidcode )
+                {
+                    lastChoose.Load("blank_background.png");
                     Session.productPos.Remove(lastChoose.Name);
                 }
+
                 choosingImage.Load(Session.product.link_image);
                 Session.productPos.Add(choosingImage.Name, data);
                 lastChoose = choosingImage;

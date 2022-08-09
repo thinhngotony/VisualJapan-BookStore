@@ -3510,8 +3510,25 @@ namespace Shelf_Register
                     {
                         if (pic.Name == pictureBoxDuplicateName)
                         {
+                            if (Session.status_mode == true)
+                            {
                                 pic.Load("blank_background.png");
-                            break;
+                                Image img = changeOpacity(new Bitmap(pic.Image), 100);
+                                pic.Image = img;
+                                string key_text = pic.Name.Replace("pictureBox", "textBox");
+                                foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                                {
+                                    if (txtBox_Items.Name == key_text)
+                                    {
+                                        txtBox_Items.BackColor = Color.White;
+                                    }
+                                }
+                            } else
+                            {
+                                pic.Load("blank_background.png");
+                                break;
+                            }
+
                         }
                     }
                     Session.productPos.Remove(pictureBoxDuplicateName);

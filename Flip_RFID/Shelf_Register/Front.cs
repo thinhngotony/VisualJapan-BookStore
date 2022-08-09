@@ -172,8 +172,10 @@ namespace Shelf_Register
             {
                     Image img = changeOpacity(new Bitmap(pictureBox_Items.Image), 255);
                     pictureBox_Items.Image = img;
-                    //string key_text = key.Replace("pictureBox", "textBox");
-
+            }
+            foreach (TextBox txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+            {
+                txtBox_Items.BackColor = Color.PaleTurquoise;
             }
         }
 
@@ -223,7 +225,10 @@ namespace Shelf_Register
                     if (!Session.productPos.Keys.Contains(picBox_Items.Name) && Session.mappingTextBox[picBox_Items.Name] == txtBox_Items.Name && txtBox_Items.Text != "") 
                     {
                         txtBox_Items.Text = "";
+                        if (Session.status_mode == false) 
+                        { 
                         txtBox_Items.BackColor = Color.PaleTurquoise;
+                        }
                     }
                 }
 
@@ -279,6 +284,7 @@ namespace Shelf_Register
                 txtJan.Text = "";
                 txtName.Text = "";
                 pictureBox.Load("blank_background.png");
+
                 foreach (PictureBox pictureBox_Items in ImageLayer.Controls.OfType<PictureBox>())
                 {
                     pictureBox_Items.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -886,7 +892,6 @@ namespace Shelf_Register
                     int n = opos.OPOS_EnableDevice(Session.OPOSRFID1);
                     if (n == -1)
                     {
-                        resetLabel(1);
                         opos.OPOS_StartReading(Session.OPOSRFID1);
                         //opos.OPOS_readSingleTag(Session.OPOSRFID1);
                         btnConnect.Text = "StopReading";
@@ -919,7 +924,6 @@ namespace Shelf_Register
                     break;
                 case "StartReading":
                     //opos.OPOS_readSingleTag(Session.OPOSRFID1);
-                    resetLabel(1);
                     opos.OPOS_StartReading(Session.OPOSRFID1);
                     btnConnect.Text = "StopReading";
                     richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device started Reading \n";
@@ -936,6 +940,8 @@ namespace Shelf_Register
         private void btnClear_Click(object sender, EventArgs e)
         {
             richTextBox1.Text = "";
+            btnCheck.ForeColor = Color.White;
+            btnLoad.ForeColor = Color.White;
             resetLabel(1);
             updateView();
         }
@@ -3376,7 +3382,6 @@ namespace Shelf_Register
 
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            if (Session.status_mode == false) { 
             PictureBox choosingImage = sender as PictureBox;
             ProductPos temp = new ProductPos();
             ProductPos data = new ProductPos
@@ -3416,10 +3421,28 @@ namespace Shelf_Register
                         foreach (PictureBox duplicateItems in ImageLayer.Controls.OfType<PictureBox>())
                         {
                             if (duplicateItems.Name == pictureBoxDuplicateName && Session.productPos[duplicateItems.Name].RFIDcode != "")
-                            {                    
+                            {
+                                if (Session.status_mode == true)
+                                {
+                                    duplicateItems.Load("blank_background.png");
+                                    Image img = changeOpacity(new Bitmap(duplicateItems.Image), 100);
+                                    duplicateItems.Image = img;
+                                    string key_text = duplicateItems.Name.Replace("pictureBox", "textBox");
+                                    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                                    {
+                                        if (txtBox_Items.Name == key_text ) 
+                                        { 
+                                        txtBox_Items.BackColor = Color.White;
+                                        }
+                                    }
+                                    Session.productPos.Remove(pictureBoxDuplicateName);
+                                    break;
+                                } else 
+                                { 
                                 duplicateItems.Load("blank_background.png");
                                 Session.productPos.Remove(pictureBoxDuplicateName);
                                 break;
+                                }
                             }
                         }
                     }
@@ -3427,10 +3450,12 @@ namespace Shelf_Register
                     //New feature
                     //if (Session.product.link_image != "" && !Session.productPos.ContainsKey("temp"))
                     if (Session.product.link_image != "")
-                    {                       
+                    {
                         choosingImage.Load(Session.product.link_image);
                         Session.productPos[choosingImage.Name] = data;
                         lastChoose = choosingImage;
+
+                        
                     } else
                     {
                         ////New feature
@@ -3457,8 +3482,25 @@ namespace Shelf_Register
                  { 
                     if (Session.productPos[lastChoose.Name].RFIDcode == Session.rfidcode)
                     {
+                        if (Session.status_mode == true)
+                        {
+                            lastChoose.Load("blank_background.png");
+                            Image img = changeOpacity(new Bitmap(lastChoose.Image), 100);
+                            lastChoose.Image = img;
+                            string key_text = lastChoose.Name.Replace("pictureBox", "textBox");
+                            foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                            {
+                                if (txtBox_Items.Name == key_text)
+                                {
+                                    txtBox_Items.BackColor = Color.White;
+                                }
+                            }
+                            Session.productPos.Remove(lastChoose.Name);
+                        } else 
+                        { 
                         lastChoose.Load("blank_background.png");
                         Session.productPos.Remove(lastChoose.Name);
+                        }
                     }
                  }
                 string pictureBoxDuplicateName = Session.productPos.FirstOrDefault(t => t.Value.RFIDcode == txtRfid.Text).Key;
@@ -3468,7 +3510,7 @@ namespace Shelf_Register
                     {
                         if (pic.Name == pictureBoxDuplicateName)
                         {
-                            pic.Load("blank_background.png");
+                                pic.Load("blank_background.png");
                             break;
                         }
                     }
@@ -3478,6 +3520,7 @@ namespace Shelf_Register
                 if (Session.product.link_image != "")
                 {
                     choosingImage.Load(Session.product.link_image);
+
                     //Session.productPos.Add(choosingImage.Name, data);
                     Session.productPos[choosingImage.Name] = data;
                     lastChoose = choosingImage;                    
@@ -3488,10 +3531,6 @@ namespace Shelf_Register
                 Console.WriteLine("Do nothing");
             }
             updateName();
-            } else
-            {
-                Console.WriteLine("Do nothings");
-            }
         }
 
         private void pictureBox_DoubleClick(object sender, EventArgs e)
@@ -3550,10 +3589,21 @@ namespace Shelf_Register
                 wait.Visible = true;
                 string shelfName = cbShelf.Text;
                 Task.Run(() => ApiSetSmartShelfSetting(shelfName)).Wait();
-                wait.Visible = false;
-                
+                resetStatus();
+                //if (btnLoad.ForeColor == Color.Red)
+                //{
+                //    updatePictureBox();
+                //    updateName();
+                //} else if (btnCheck.ForeColor == Color.Red)
+                //{
+                //    updatePictureBox();
+                //    updateName();
+                //    updateStatus();
+                //}
+                    wait.Visible = false;                
             }
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
+            System.Windows.Forms.MessageBox.Show(api_message);
 
 
         }
@@ -3572,6 +3622,13 @@ namespace Shelf_Register
         {
 
             resetLabel(1);
+
+            btnLoad.ForeColor = Color.Red;
+            if (btnCheck.ForeColor == Color.Red)
+            {
+                btnCheck.ForeColor = Color.White;
+            }
+
             Wait wait = new Wait();
             wait.Visible = true;
             updatePictureBox();
@@ -3598,36 +3655,42 @@ namespace Shelf_Register
 
         private void btnCheck_Click(object sender, EventArgs e)
         {
+            //if (btnConnect.Text == "StopReading") { 
+            //opos.OPOS_StopReading(Session.OPOSRFID1);       
+            //btnConnect.Text = "StartReading";
+            //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
+            //}
 
-            if (btnConnect.Text == "StopReading") { 
-            opos.OPOS_StopReading(Session.OPOSRFID1);
-            //opos.OPOS_reset(Session.OPOSRFID1);
-            btnConnect.Text = "StartReading";
-            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
+            //btnCheck.Text = btnCheck.Text == "CHECK"?"CHECKING...":"CHECK";
+            //if (btnCheck.Text == "CHECKING...") {
+            //    Wait wait = new Wait();
+            //    wait.Visible = true;
+            //    updatePictureBox();
+            //    updateName();
+            //    updateStatus();
+            //    wait.Visible = false;
+            //    resetCheck.Start();
+
+            //} else
+            //{               
+            //    resetCheck.Stop();
+            //}
+
+
+            //Check single time
+            btnCheck.ForeColor = Color.Red;
+            if (btnLoad.ForeColor == Color.Red)
+            {
+                btnLoad.ForeColor = Color.White;
             }
 
-            btnCheck.Text = btnCheck.Text == "CHECK"?"CHECKING...":"CHECK";
-            if (btnCheck.Text == "CHECKING...") {
-                Wait wait = new Wait();
-                wait.Visible = true;
-                updatePictureBox();
-                updateName();
-                updateStatus();
-                wait.Visible = false;
-                resetCheck.Start();
-
-            } else
-            {               
-                resetCheck.Stop();
-            }
-
-
-            //updatePictureBox();
-            //updateName();
-            //updateStatus();
-            
-
-            //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + " " + (Session.productPos[x] as ProductPos).status +" " + (Session.productPos[x] as ProductPos).RFIDcode));
+            Wait wait = new Wait();
+            wait.Visible = true;
+            updatePictureBox();
+            updateName();
+            updateStatus();
+            btnCheck.ForeColor = Color.Red;
+            wait.Visible = false;
         }
 
         private PictureBox getPictureBoxByName(string name)

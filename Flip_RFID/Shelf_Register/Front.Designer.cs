@@ -183,7 +183,7 @@ namespace Shelf_Register
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(222, 27);
             this.btnClear.TabIndex = 12;
-            this.btnClear.Text = "CLEAR";
+            this.btnClear.Text = "RENEW ALL";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 

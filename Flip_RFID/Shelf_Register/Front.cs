@@ -3598,8 +3598,7 @@ namespace Shelf_Register
 
         private void btnCheck_Click(object sender, EventArgs e)
         {
-            Wait wait = new Wait();
-            wait.Visible = true;
+
             if (btnConnect.Text == "StopReading") { 
             opos.OPOS_StopReading(Session.OPOSRFID1);
             //opos.OPOS_reset(Session.OPOSRFID1);
@@ -3607,10 +3606,27 @@ namespace Shelf_Register
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
             }
 
-            updatePictureBox();
-            updateName();
-            updateStatus();
-            wait.Visible = false;
+            btnCheck.Text = btnCheck.Text == "CHECK"?"CHECKING...":"CHECK";
+            if (btnCheck.Text == "CHECKING...") {
+                Wait wait = new Wait();
+                wait.Visible = true;
+                updatePictureBox();
+                updateName();
+                updateStatus();
+                wait.Visible = false;
+                resetCheck.Start();
+
+            } else
+            {               
+                resetCheck.Stop();
+            }
+
+
+            //updatePictureBox();
+            //updateName();
+            //updateStatus();
+            
+
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + " " + (Session.productPos[x] as ProductPos).status +" " + (Session.productPos[x] as ProductPos).RFIDcode));
         }
 
@@ -3669,6 +3685,17 @@ namespace Shelf_Register
                 opos.OPOS_StopReading(Session.OPOSRFID1);
             }
             catch (Exception) {}
+        }
+
+        private void resetCheck_Tick(object sender, EventArgs e)
+        {
+            resetLabel(1);
+            Wait wait = new Wait();
+            wait.Visible = true;
+            updatePictureBox();
+            updateName();
+            updateStatus();
+            wait.Visible = false;
         }
     }
 }

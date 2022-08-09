@@ -30,6 +30,7 @@ namespace Shelf_Register
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lJan = new System.Windows.Forms.Label();
             this.txtJan = new System.Windows.Forms.TextBox();
             this.lRfid = new System.Windows.Forms.Label();
@@ -99,6 +100,7 @@ namespace Shelf_Register
             this.cbShelf = new System.Windows.Forms.ComboBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lbName = new System.Windows.Forms.Label();
+            this.resetCheck = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_3)).BeginInit();
@@ -988,6 +990,11 @@ namespace Shelf_Register
             this.lbName.TabIndex = 66;
             this.lbName.Text = "NAME";
             // 
+            // resetCheck
+            // 
+            this.resetCheck.Interval = 5000;
+            this.resetCheck.Tick += new System.EventHandler(this.resetCheck_Tick);
+            // 
             // Front
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1124,6 +1131,7 @@ namespace Shelf_Register
         private System.Windows.Forms.TextBox textBox_4_5;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lbName;
+        private System.Windows.Forms.Timer resetCheck;
     }
 }
 

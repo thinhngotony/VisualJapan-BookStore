@@ -134,24 +134,7 @@ namespace Shelf_Register
                 //PictureBox pic = Image_Items as PictureBox;
                 Task.Run(() => ApiGetSmartShelfStatus(key, Session.productPos[key].RFIDcode)).Wait();
 
-                if (Session.productPos[key].status != "00")
-                {
-                    PictureBox pic = getPictureBoxByName(key);
-                    Image img = changeOpacity(new Bitmap(pic.Image), 100);
-                    pic.Image = img;
-                    string key_text = key.Replace("pictureBox", "textBox");
-                    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
-                    {
-                        if (txtBox_Items.Name == key_text)
-                        {
-                            txtBox_Items.BackColor = Color.White;
-                        } else  
-                        {
-                            //txtBox_Items.BackColor = Color.LightGreen;
-                        }
-                        Session.status_mode = true;
-                    }
-                } else if (Session.productPos[key].status == "00")
+                if (Session.productPos[key].status == "00")
                 {
                     string key_text = key.Replace("pictureBox", "textBox");
                     foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
@@ -163,8 +146,43 @@ namespace Shelf_Register
                         Session.status_mode = true;
                     }
                 }
+                else
+                {
+                    PictureBox pic = getPictureBoxByName(key);
+                    Image img = changeOpacity(new Bitmap(pic.Image), 100);
+                    pic.Image = img;
+
+                    string key_text = key.Replace("pictureBox", "textBox");
+                    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                    {
+                        if (txtBox_Items.Name == key_text)
+                        {
+                            txtBox_Items.BackColor = Color.White;
+                        }
+                        else
+                        {
+                            //txtBox_Items.BackColor = Color.LightGreen;
+                        }
+                        Session.status_mode = true;
+                    }
+                }
             }
+
+            //foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+            //{
+            //    foreach (var picBox_Items in ImageLayer.Controls.OfType<PictureBox>())
+            //    {
+            //        if (!Session.productPos.Keys.Contains(picBox_Items.Name) && Session.mappingTextBox[picBox_Items.Name] == txtBox_Items.Name )
+            //        {
+            //            Image img = changeOpacity(new Bitmap(picBox_Items.Image), 100);
+            //            picBox_Items.Image = img;
+            //            txtBox_Items.BackColor = Color.White;
+            //        }
+            //    }
+            //}
+
         }
+
 
         public void resetStatus()
         {
@@ -228,10 +246,9 @@ namespace Shelf_Register
                         if (Session.status_mode == false) 
                         { 
                         txtBox_Items.BackColor = Color.PaleTurquoise;
-                        }
+                        } 
                     }
                 }
-
             }
         }
 
@@ -3563,11 +3580,12 @@ namespace Shelf_Register
 
                 if (confirmResult == DialogResult.Yes)
                 {
+                    //bugging
                     deleteImage.Load("blank_background.png");
                     Session.productPos.Remove(deleteImage.Name);
                     deleteName();
-                    //ProductPos z = Session.productPos[deleteImage.Name];
-                    //Session.productPos.Keys.ToList().ForEach(z => Console.WriteLine("Result after delete" + z.ToString()));
+                //ProductPos z = Session.productPos[deleteImage.Name];
+                //Session.productPos.Keys.ToList().ForEach(z => Console.WriteLine("Result after delete" + z.ToString()));
                 }
 
             } else

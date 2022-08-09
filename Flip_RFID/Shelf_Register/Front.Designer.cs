@@ -183,7 +183,7 @@ namespace Shelf_Register
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(222, 27);
             this.btnClear.TabIndex = 12;
-            this.btnClear.Text = "RENEW ALL";
+            this.btnClear.Text = "CREATE NEW SHELF";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
@@ -201,7 +201,7 @@ namespace Shelf_Register
             // 
             // btnConnect
             // 
-            this.btnConnect.BackColor = System.Drawing.Color.Teal;
+            this.btnConnect.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnConnect.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConnect.ForeColor = System.Drawing.Color.White;
             this.btnConnect.Location = new System.Drawing.Point(793, 589);
@@ -909,7 +909,7 @@ namespace Shelf_Register
             // 
             // btnRegister
             // 
-            this.btnRegister.BackColor = System.Drawing.Color.Teal;
+            this.btnRegister.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnRegister.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnRegister.ForeColor = System.Drawing.Color.White;
             this.btnRegister.Location = new System.Drawing.Point(793, 513);
@@ -931,7 +931,7 @@ namespace Shelf_Register
             // 
             // btnLoad
             // 
-            this.btnLoad.BackColor = System.Drawing.Color.Teal;
+            this.btnLoad.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnLoad.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnLoad.ForeColor = System.Drawing.Color.White;
             this.btnLoad.Location = new System.Drawing.Point(904, 589);
@@ -944,7 +944,7 @@ namespace Shelf_Register
             // 
             // btnCheck
             // 
-            this.btnCheck.BackColor = System.Drawing.Color.Teal;
+            this.btnCheck.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnCheck.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnCheck.ForeColor = System.Drawing.Color.White;
             this.btnCheck.Location = new System.Drawing.Point(904, 514);

@@ -940,8 +940,8 @@ namespace Shelf_Register
         private void btnClear_Click(object sender, EventArgs e)
         {
             richTextBox1.Text = "";
-            btnCheck.ForeColor = Color.White;
-            btnLoad.ForeColor = Color.White;
+            btnCheck.BackColor = Color.RoyalBlue;
+            btnLoad.BackColor = Color.RoyalBlue;
             resetLabel(1);
             updateView();
         }
@@ -3597,30 +3597,19 @@ namespace Shelf_Register
         {
 
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).Jancode));
-
-            DialogResult confirmResult = MessageBox.Show("If this shelf contains other shelf's RFID codes, the other shelf's RFID codes will be deleted, are you sure register?", "Confirm Diaglog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-
-            if (confirmResult == DialogResult.Yes)
+           
+            DialogResult warningPopUp = MessageBox.Show("If this shelf contains other shelf's RFID codes, the other shelf's RFID codes will be deleted, are you sure register?", "Confirm Diaglog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (warningPopUp == DialogResult.Yes)
             {
                 Wait wait = new Wait();
                 wait.Visible = true;
                 string shelfName = cbShelf.Text;
                 Task.Run(() => ApiSetSmartShelfSetting(shelfName)).Wait();
-                resetStatus();
-                //if (btnLoad.ForeColor == Color.Red)
-                //{
-                //    updatePictureBox();
-                //    updateName();
-                //} else if (btnCheck.ForeColor == Color.Red)
-                //{
-                //    updatePictureBox();
-                //    updateName();
-                //    updateStatus();
-                //}
-                    wait.Visible = false;                
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
+                wait.Visible = false;
+                DialogResult confirmResult = MessageBox.Show(api_message, "Result", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
-            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
-            System.Windows.Forms.MessageBox.Show(api_message);
+
 
 
         }
@@ -3639,13 +3628,6 @@ namespace Shelf_Register
         {
 
             resetLabel(1);
-
-            btnLoad.ForeColor = Color.Red;
-            if (btnCheck.ForeColor == Color.Red)
-            {
-                btnCheck.ForeColor = Color.White;
-            }
-
             Wait wait = new Wait();
             wait.Visible = true;
             updatePictureBox();
@@ -3653,6 +3635,12 @@ namespace Shelf_Register
             wait.Visible = false;
             Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + " "+  (Session.productPos[x] as ProductPos).RFIDcode));
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
+
+            btnLoad.BackColor = Color.ForestGreen;
+            if (btnCheck.BackColor == Color.ForestGreen)
+            {
+                btnCheck.BackColor = Color.RoyalBlue;
+            }
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
         }
@@ -3695,19 +3683,20 @@ namespace Shelf_Register
 
 
             //Check single time
-            btnCheck.ForeColor = Color.Red;
-            if (btnLoad.ForeColor == Color.Red)
-            {
-                btnLoad.ForeColor = Color.White;
-            }
 
             Wait wait = new Wait();
             wait.Visible = true;
             updatePictureBox();
             updateName();
             updateStatus();
-            btnCheck.ForeColor = Color.Red;
             wait.Visible = false;
+
+            btnCheck.BackColor = Color.ForestGreen;
+            if (btnLoad.BackColor == Color.ForestGreen)
+            {
+                btnLoad.BackColor = Color.RoyalBlue;
+            }
+
         }
 
         private PictureBox getPictureBoxByName(string name)

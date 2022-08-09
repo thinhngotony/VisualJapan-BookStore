@@ -939,11 +939,15 @@ namespace Shelf_Register
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text = "";
-            btnCheck.BackColor = Color.RoyalBlue;
-            btnLoad.BackColor = Color.RoyalBlue;
-            resetLabel(1);
-            updateView();
+            DialogResult warningPopUp = MessageBox.Show("All data added, deleted, edited in the interface will be removed, are you sure?", "Confirm Diaglog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (warningPopUp == DialogResult.Yes)
+            {
+                cbShelf.Text = "";
+                richTextBox1.Text = "";
+                btnCheck.BackColor = Color.RoyalBlue;
+                btnLoad.BackColor = Color.RoyalBlue;
+                resetLabel(1);
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -3597,20 +3601,24 @@ namespace Shelf_Register
         {
 
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).Jancode));
-           
-            DialogResult warningPopUp = MessageBox.Show("If this shelf contains other shelf's RFID codes, the other shelf's RFID codes will be deleted, are you sure register?", "Confirm Diaglog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-            if (warningPopUp == DialogResult.Yes)
+            if (cbShelf.Text == "")
             {
-                Wait wait = new Wait();
-                wait.Visible = true;
-                string shelfName = cbShelf.Text;
-                Task.Run(() => ApiSetSmartShelfSetting(shelfName)).Wait();
-                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
-                wait.Visible = false;
-                DialogResult confirmResult = MessageBox.Show(api_message, "Result", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                DialogResult infoPopUp = MessageBox.Show("Missing data in shelf name field, please input or choose!", "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-
+            else 
+            { 
+            DialogResult warningPopUp = MessageBox.Show("If this shelf contains other shelf's RFID codes, the other shelf's RFID codes will be deleted, are you sure register?", "Confirm Diaglog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (warningPopUp == DialogResult.Yes)
+                {
+                    Wait wait = new Wait();
+                    wait.Visible = true;
+                    string shelfName = cbShelf.Text;
+                    Task.Run(() => ApiSetSmartShelfSetting(shelfName)).Wait();
+                    richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss ") + api_message + "\n";
+                    wait.Visible = false;
+                    DialogResult confirmResult = MessageBox.Show(api_message, "Result", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+            }
 
         }
 
@@ -3633,7 +3641,6 @@ namespace Shelf_Register
             updatePictureBox();
             updateName();
             wait.Visible = false;
-            Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString() + " "+  (Session.productPos[x] as ProductPos).RFIDcode));
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
 
             btnLoad.BackColor = Color.ForestGreen;
@@ -3658,32 +3665,31 @@ namespace Shelf_Register
             return pic;
         }
 
+        private void btnCheckInterval_Click(object sender, EventArgs e)
+        {
+            btnCheck.Text = btnCheck.Text == "CHECK" ? "CHECKING..." : "CHECK";
+            if (btnCheck.Text == "CHECKING...")
+            {
+                Wait wait = new Wait();
+                wait.Visible = true;
+                updatePictureBox();
+                updateName();
+                updateStatus();
+                wait.Visible = false;
+                resetCheck.Start();
+            }
+            else
+            {
+                resetCheck.Stop();
+            }
+        }
+
         private void btnCheck_Click(object sender, EventArgs e)
         {
-            //if (btnConnect.Text == "StopReading") { 
-            //opos.OPOS_StopReading(Session.OPOSRFID1);       
-            //btnConnect.Text = "StartReading";
-            //richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + ": Device stopped Reading \n";
-            //}
 
-            //btnCheck.Text = btnCheck.Text == "CHECK"?"CHECKING...":"CHECK";
-            //if (btnCheck.Text == "CHECKING...") {
-            //    Wait wait = new Wait();
-            //    wait.Visible = true;
-            //    updatePictureBox();
-            //    updateName();
-            //    updateStatus();
-            //    wait.Visible = false;
-            //    resetCheck.Start();
-
-            //} else
-            //{               
-            //    resetCheck.Stop();
-            //}
 
 
             //Check single time
-
             Wait wait = new Wait();
             wait.Visible = true;
             updatePictureBox();

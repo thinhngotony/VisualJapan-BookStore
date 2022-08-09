@@ -881,9 +881,9 @@ namespace Shelf_Register
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label1.Location = new System.Drawing.Point(790, 204);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.Size = new System.Drawing.Size(85, 13);
             this.label1.TabIndex = 58;
-            this.label1.Text = "SHELF";
+            this.label1.Text = "SHELF NAME";
             // 
             // txtScanner
             // 
@@ -903,9 +903,9 @@ namespace Shelf_Register
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(790, 159);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 13);
+            this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 60;
-            this.label2.Text = "SCANNER";
+            this.label2.Text = "DEVICE NAME";
             // 
             // btnRegister
             // 
@@ -986,9 +986,9 @@ namespace Shelf_Register
             this.lbName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbName.Location = new System.Drawing.Point(790, 114);
             this.lbName.Name = "lbName";
-            this.lbName.Size = new System.Drawing.Size(42, 13);
+            this.lbName.Size = new System.Drawing.Size(106, 13);
             this.lbName.TabIndex = 66;
-            this.lbName.Text = "NAME";
+            this.lbName.Text = "PRODUCT NAME";
             // 
             // resetCheck
             // 

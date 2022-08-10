@@ -66,6 +66,7 @@ namespace Shelf_Register
             Session.bquery_sub = dataInFile["bquery_sub"];
             Session.device_name = dataInFile["device_name"];
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);
+            resetCheck.Interval = (int)Int64.Parse(dataInFile["interval_miliseconds"]);
             Session.JanLen = (int)Int64.Parse(dataInFile["JanLen"]);
             Session.sub_rfid_to_status_smart_self = dataInFile["sub_rfid_to_status_smart_self"];
 
@@ -81,6 +82,8 @@ namespace Shelf_Register
             cbShelf.DataSource = Session.smart_shelf_names;
             cbShelf.SelectedItem = "SHELF 2";
             //Session.OPOSRFID1.DataEvent += new _DOPOSRFIDEvents_DataEventEventHandler(OPOSRFID1_DataEvent);
+
+            
 
 
 
@@ -148,9 +151,13 @@ namespace Shelf_Register
                 }
                 else
                 {
+                    //Bugging
                     PictureBox pic = getPictureBoxByName(key);
-                    Image img = changeOpacity(new Bitmap(pic.Image), 100);
-                    pic.Image = img;
+
+                    if (pic != null) { 
+                        Image img = changeOpacity(new Bitmap(pic.Image), 100);
+                        pic.Image = img;
+                    }
 
                     string key_text = key.Replace("pictureBox", "textBox");
                     foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
@@ -243,10 +250,10 @@ namespace Shelf_Register
                     if (!Session.productPos.Keys.Contains(picBox_Items.Name) && Session.mappingTextBox[picBox_Items.Name] == txtBox_Items.Name && txtBox_Items.Text != "") 
                     {
                         txtBox_Items.Text = "";
-                        if (Session.status_mode == false) 
-                        { 
+                        //if (Session.status_mode == false) 
+                        //{ 
                         txtBox_Items.BackColor = Color.PaleTurquoise;
-                        } 
+                        //} 
                     }
                 }
             }
@@ -961,6 +968,7 @@ namespace Shelf_Register
             {
                 cbShelf.Text = "";
                 richTextBox1.Text = "";
+                btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
                 btnLoad.BackColor = Color.RoyalBlue;
                 resetLabel(1);
@@ -3424,12 +3432,12 @@ namespace Shelf_Register
                 Session.product.link_image = "noimage.png";
             }
 
-            //if (Session.productPos.Keys.Contains(choosingImage.Name) && Session.productPos[choosingImage.Name].RFIDcode != "")
-            //{
-            //    Session.productPos["temp"] = Session.productPos[choosingImage.Name];
-            //    Session.productPos["temp"].picture_box = choosingImage;
-            //    Console.WriteLine("Saved data to temp");          
-            //}
+            if (Session.productPos.Keys.Contains(choosingImage.Name) && Session.productPos[choosingImage.Name].RFIDcode != "")
+            {
+                Session.productPos["temp"] = Session.productPos[choosingImage.Name];
+                Session.productPos["temp"].picture_box = choosingImage;
+                Console.WriteLine("Saved data to temp");
+            }
 
             if (lastChoose == null)
             {
@@ -3480,19 +3488,38 @@ namespace Shelf_Register
                     } else
                     {
                         ////New feature
-                        //choosingImage.Load(Session.productPos["temp"].link_image);
-                        //Session.productPos[choosingImage.Name] = Session.productPos["temp"];                        
-                        //lastChoose = choosingImage;
-                        ////Continue handle duplicate image
-                        //Session.productPos["temp"].picture_box.Load("blank_background.png");
-                        ////Add data to dictionary
-                        //data.Jancode = Session.productPos[choosingImage.Name].Jancode;
-                        //data.RFIDcode = Session.productPos[choosingImage.Name].RFIDcode;
-                        //data.product_name = Session.productPos[choosingImage.Name].product_name;
-                        //data.isbn = Session.productPos[choosingImage.Name].isbn;
-                        //data.link_image = Session.productPos[choosingImage.Name].link_image;
-                        //Session.productPos[choosingImage.Name] = data;
-                        //Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
+                        if (Session.productPos.Keys.Contains("temp"))
+                        {
+                            choosingImage.Load(Session.productPos["temp"].link_image);
+                            Session.productPos[choosingImage.Name] = Session.productPos["temp"];
+
+                            //Continue handle duplicate image
+                            Session.productPos["temp"].picture_box.Load("blank_background.png");
+                            ////Load black screen for last choose
+                            //if (btnCheck.BackColor == Color.ForestGreen)
+                            //{
+                            //    Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
+                            //    Session.productPos["temp"].picture_box.Image = img;
+                            //    string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
+                            //    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                            //    {
+                            //        if (txtBox_Items.Name == key_text)
+                            //        {
+                            //            txtBox_Items.BackColor = Color.White;
+                            //        }
+                            //    }
+                            //}
+                            lastChoose = choosingImage;
+                            //Add data to dictionary
+                            data.Jancode = Session.productPos[choosingImage.Name].Jancode;
+                            data.RFIDcode = Session.productPos[choosingImage.Name].RFIDcode;
+                            data.product_name = Session.productPos[choosingImage.Name].product_name;
+                            data.isbn = Session.productPos[choosingImage.Name].isbn;
+                            data.link_image = Session.productPos[choosingImage.Name].link_image;
+                            Session.productPos[choosingImage.Name] = data;
+                            Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
+                            Session.productPos.Remove("temp");
+                        }
                     }
                 }
             }
@@ -3562,6 +3589,40 @@ namespace Shelf_Register
                     //Session.productPos.Add(choosingImage.Name, data);
                     Session.productPos[choosingImage.Name] = data;
                     lastChoose = choosingImage;                    
+                }
+                else
+                {
+                    if (Session.productPos.Keys.Contains("temp"))
+                    {
+                        ////New feature
+                        choosingImage.Load(Session.productPos["temp"].link_image);
+                        Session.productPos[choosingImage.Name] = Session.productPos["temp"];
+                        lastChoose = choosingImage;
+                        //Continue handle duplicate image
+                        Session.productPos["temp"].picture_box.Load("blank_background.png");
+                        //Add data to dictionary
+                        data.Jancode = Session.productPos[choosingImage.Name].Jancode;
+                        data.RFIDcode = Session.productPos[choosingImage.Name].RFIDcode;
+                        data.product_name = Session.productPos[choosingImage.Name].product_name;
+                        data.isbn = Session.productPos[choosingImage.Name].isbn;
+                        data.link_image = Session.productPos[choosingImage.Name].link_image;
+                        Session.productPos[choosingImage.Name] = data;
+                        //if (btnCheck.BackColor == Color.ForestGreen)
+                        //{
+                        //    Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
+                        //    Session.productPos["temp"].picture_box.Image = img;
+                        //    string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
+                        //    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                        //    {
+                        //        if (txtBox_Items.Name == key_text)
+                        //        {
+                        //            txtBox_Items.BackColor = Color.White;
+                        //        }
+                        //    }
+                        //}
+                        Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
+                        Session.productPos.Remove("temp");
+                    }
                 }
             }
             else
@@ -3664,7 +3725,9 @@ namespace Shelf_Register
             btnLoad.BackColor = Color.ForestGreen;
             if (btnCheck.BackColor == Color.ForestGreen)
             {
+                btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
+                resetCheck.Stop();
             }
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
@@ -3690,8 +3753,6 @@ namespace Shelf_Register
             {
                 Wait wait = new Wait();
                 wait.Visible = true;
-                updatePictureBox();
-                updateName();
                 updateStatus();
                 wait.Visible = false;
                 resetCheck.Start();
@@ -3704,22 +3765,38 @@ namespace Shelf_Register
 
         private void btnCheck_Click(object sender, EventArgs e)
         {
+            
 
 
-
-            //Check single time
-            Wait wait = new Wait();
-            wait.Visible = true;
-            updatePictureBox();
-            updateName();
-            updateStatus();
-            wait.Visible = false;
-
-            btnCheck.BackColor = Color.ForestGreen;
-            if (btnLoad.BackColor == Color.ForestGreen)
+            ////Check single time
+            //Wait wait = new Wait();
+            //wait.Visible = true;
+            //updatePictureBox();
+            //updateName();
+            //updateStatus();
+            //wait.Visible = false;
+            btnCheck.Text = btnCheck.Text == "CHECK" ? "CHECKING..." : "CHECK";
+            if (btnCheck.Text == "CHECKING...")
             {
-                btnLoad.BackColor = Color.RoyalBlue;
+                Wait wait = new Wait();
+                wait.Visible = true;
+                updateStatus();
+                wait.Visible = false;
+                resetCheck.Start();
+                btnCheck.BackColor = Color.ForestGreen;
+                if (btnLoad.BackColor == Color.ForestGreen)
+                {
+                    btnLoad.BackColor = Color.RoyalBlue;
+                }
             }
+            else
+            {
+                resetCheck.Stop();
+                btnCheck.Text = "CHECK";
+                btnCheck.BackColor = Color.RoyalBlue;
+            }
+
+
 
         }
 
@@ -3782,11 +3859,8 @@ namespace Shelf_Register
 
         private void resetCheck_Tick(object sender, EventArgs e)
         {
-            resetLabel(1);
             Wait wait = new Wait();
             wait.Visible = true;
-            updatePictureBox();
-            updateName();
             updateStatus();
             wait.Visible = false;
         }

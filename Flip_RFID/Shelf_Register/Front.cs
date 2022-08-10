@@ -250,11 +250,11 @@ namespace Shelf_Register
                     if (!Session.productPos.Keys.Contains(picBox_Items.Name) && Session.mappingTextBox[picBox_Items.Name] == txtBox_Items.Name && txtBox_Items.Text != "") 
                     {
                         txtBox_Items.Text = "";
-                        //if (Session.status_mode == false) 
-                        //{ 
-                        txtBox_Items.BackColor = Color.PaleTurquoise;
-                        //} 
-                    }
+                        if (Session.status_mode == false)
+                        {
+                            txtBox_Items.BackColor = Color.PaleTurquoise;
+                        }   
+                }
                 }
             }
         }
@@ -972,6 +972,7 @@ namespace Shelf_Register
                 btnCheck.BackColor = Color.RoyalBlue;
                 btnLoad.BackColor = Color.RoyalBlue;
                 resetLabel(1);
+                updateView();
             }
         }
 
@@ -3459,18 +3460,19 @@ namespace Shelf_Register
                                     string key_text = duplicateItems.Name.Replace("pictureBox", "textBox");
                                     foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
                                     {
-                                        if (txtBox_Items.Name == key_text ) 
-                                        { 
-                                        txtBox_Items.BackColor = Color.White;
+                                        if (txtBox_Items.Name == key_text)
+                                        {
+                                            txtBox_Items.BackColor = Color.White;
                                         }
                                     }
                                     Session.productPos.Remove(pictureBoxDuplicateName);
                                     break;
-                                } else 
-                                { 
-                                duplicateItems.Load("blank_background.png");
-                                Session.productPos.Remove(pictureBoxDuplicateName);
-                                break;
+                                }
+                                else
+                                {
+                                    duplicateItems.Load("blank_background.png");
+                                    Session.productPos.Remove(pictureBoxDuplicateName);
+                                    break;
                                 }
                             }
                         }
@@ -3478,14 +3480,13 @@ namespace Shelf_Register
                     //Load data from panel to screen 
                     //New feature
                     //if (Session.product.link_image != "" && !Session.productPos.ContainsKey("temp"))
-                    if (Session.product.link_image != "")
+                    if (Session.product.link_image != "" && !Session.productPos.Keys.Contains("temp"))
                     {
                         choosingImage.Load(Session.product.link_image);
                         Session.productPos[choosingImage.Name] = data;
                         lastChoose = choosingImage;
-
-                        
-                    } else
+                    }
+                    else
                     {
                         ////New feature
                         if (Session.productPos.Keys.Contains("temp"))
@@ -3496,19 +3497,19 @@ namespace Shelf_Register
                             //Continue handle duplicate image
                             Session.productPos["temp"].picture_box.Load("blank_background.png");
                             ////Load black screen for last choose
-                            //if (btnCheck.BackColor == Color.ForestGreen)
-                            //{
-                            //    Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
-                            //    Session.productPos["temp"].picture_box.Image = img;
-                            //    string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
-                            //    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
-                            //    {
-                            //        if (txtBox_Items.Name == key_text)
-                            //        {
-                            //            txtBox_Items.BackColor = Color.White;
-                            //        }
-                            //    }
-                            //}
+                            if (btnCheck.BackColor == Color.ForestGreen)
+                            {
+                                Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
+                                Session.productPos["temp"].picture_box.Image = img;
+                                string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
+                                foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                                {
+                                    if (txtBox_Items.Name == key_text)
+                                    {
+                                        txtBox_Items.BackColor = Color.White;
+                                    }
+                                }
+                            }
                             lastChoose = choosingImage;
                             //Add data to dictionary
                             data.Jancode = Session.productPos[choosingImage.Name].Jancode;
@@ -3526,8 +3527,8 @@ namespace Shelf_Register
             else if (choosingImage.ImageLocation == "blank_background.png")
             {
                 // Check duplicate RFID + Image
-                 if (Session.productPos.ContainsKey(lastChoose.Name))
-                 { 
+                if (Session.productPos.ContainsKey(lastChoose.Name))
+                {
                     if (Session.productPos[lastChoose.Name].RFIDcode == Session.rfidcode)
                     {
                         if (Session.status_mode == true)
@@ -3544,13 +3545,14 @@ namespace Shelf_Register
                                 }
                             }
                             Session.productPos.Remove(lastChoose.Name);
-                        } else 
-                        { 
-                        lastChoose.Load("blank_background.png");
-                        Session.productPos.Remove(lastChoose.Name);
+                        }
+                        else
+                        {
+                            lastChoose.Load("blank_background.png");
+                            Session.productPos.Remove(lastChoose.Name);
                         }
                     }
-                 }
+                }
                 string pictureBoxDuplicateName = Session.productPos.FirstOrDefault(t => t.Value.RFIDcode == txtRfid.Text).Key;
                 if (pictureBoxDuplicateName != null)
                 {
@@ -3571,7 +3573,8 @@ namespace Shelf_Register
                                         txtBox_Items.BackColor = Color.White;
                                     }
                                 }
-                            } else
+                            }
+                            else
                             {
                                 pic.Load("blank_background.png");
                                 break;
@@ -3582,13 +3585,13 @@ namespace Shelf_Register
                     Session.productPos.Remove(pictureBoxDuplicateName);
                 }
 
-                if (Session.product.link_image != "")
+                if (Session.product.link_image != "" && !Session.productPos.Keys.Contains("temp"))
                 {
                     choosingImage.Load(Session.product.link_image);
 
                     //Session.productPos.Add(choosingImage.Name, data);
                     Session.productPos[choosingImage.Name] = data;
-                    lastChoose = choosingImage;                    
+                    lastChoose = choosingImage;
                 }
                 else
                 {
@@ -3607,19 +3610,19 @@ namespace Shelf_Register
                         data.isbn = Session.productPos[choosingImage.Name].isbn;
                         data.link_image = Session.productPos[choosingImage.Name].link_image;
                         Session.productPos[choosingImage.Name] = data;
-                        //if (btnCheck.BackColor == Color.ForestGreen)
-                        //{
-                        //    Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
-                        //    Session.productPos["temp"].picture_box.Image = img;
-                        //    string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
-                        //    foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
-                        //    {
-                        //        if (txtBox_Items.Name == key_text)
-                        //        {
-                        //            txtBox_Items.BackColor = Color.White;
-                        //        }
-                        //    }
-                        //}
+                        if (btnCheck.BackColor == Color.ForestGreen)
+                        {
+                            Image img = changeOpacity(new Bitmap(Session.productPos["temp"].picture_box.Image), 100);
+                            Session.productPos["temp"].picture_box.Image = img;
+                            string key_text = Session.productPos["temp"].picture_box.Name.Replace("pictureBox", "textBox");
+                            foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                            {
+                                if (txtBox_Items.Name == key_text)
+                                {
+                                    txtBox_Items.BackColor = Color.White;
+                                }
+                            }
+                        }
                         Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
                         Session.productPos.Remove("temp");
                     }
@@ -3627,7 +3630,7 @@ namespace Shelf_Register
             }
             else
             {
-                Console.WriteLine("Do nothing");
+                
             }
             updateName();
         }
@@ -3859,10 +3862,10 @@ namespace Shelf_Register
 
         private void resetCheck_Tick(object sender, EventArgs e)
         {
-            Wait wait = new Wait();
-            wait.Visible = true;
+            //Wait wait = new Wait();
+            //wait.Visible = true;
             updateStatus();
-            wait.Visible = false;
+            //wait.Visible = false;
         }
     }
 }

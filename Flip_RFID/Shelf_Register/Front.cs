@@ -126,7 +126,6 @@ namespace Shelf_Register
                         } 
                     }
                 }
-
             }
         }
 
@@ -254,7 +253,7 @@ namespace Shelf_Register
                         {
                             txtBox_Items.BackColor = Color.PaleTurquoise;
                         }   
-                }
+                    } 
                 }
             }
         }
@@ -3437,6 +3436,10 @@ namespace Shelf_Register
             {
                 Session.productPos["temp"] = Session.productPos[choosingImage.Name];
                 Session.productPos["temp"].picture_box = choosingImage;
+
+                if (Session.productPos["temp"].link_image == ""){
+                    Session.productPos["temp"].link_image = "blank_background.png";
+                }
                 Console.WriteLine("Saved data to temp");
             }
 
@@ -3524,6 +3527,7 @@ namespace Shelf_Register
                     }
                 }
             }
+            //HERE
             else if (choosingImage.ImageLocation == "blank_background.png")
             {
                 // Check duplicate RFID + Image
@@ -3548,8 +3552,11 @@ namespace Shelf_Register
                         }
                         else
                         {
+                            //HERE
                             lastChoose.Load("blank_background.png");
                             Session.productPos.Remove(lastChoose.Name);
+
+                                                   
                         }
                     }
                 }
@@ -3620,9 +3627,11 @@ namespace Shelf_Register
                                 if (txtBox_Items.Name == key_text)
                                 {
                                     txtBox_Items.BackColor = Color.White;
+                                    txtBox_Items.Text = "";
                                 }
                             }
                         }
+                        //HERE
                         Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
                         Session.productPos.Remove("temp");
                     }

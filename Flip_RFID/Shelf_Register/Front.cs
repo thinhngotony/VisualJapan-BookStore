@@ -80,7 +80,7 @@ namespace Shelf_Register
 
             Task.Run(() => ApiGetSmartShelfNames()).Wait();
             cbShelf.DataSource = Session.smart_shelf_names;
-            cbShelf.SelectedItem = "SHELF 2";
+            cbShelf.SelectedItem = "SHELF 1";
             //Session.OPOSRFID1.DataEvent += new _DOPOSRFIDEvents_DataEventEventHandler(OPOSRFID1_DataEvent);
 
             

@@ -173,6 +173,8 @@ namespace Shelf_Register
                     }
                 }
             }
+            
+
 
             //foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
             //{
@@ -322,11 +324,17 @@ namespace Shelf_Register
 
             } else if (mode == 2)
             {
-                Session.barcode = "";
-                Session.rfidcode = "";
-                txtRfid.Text = "";
-                txtJan.Text = "";
-                txtName.Text = "";
+                foreach (PictureBox pictureBox_Items in ImageLayer.Controls.OfType<PictureBox>())
+                {
+                    pictureBox_Items.SizeMode = PictureBoxSizeMode.StretchImage;
+                    pictureBox_Items.Load("blank_background.png");
+                }
+                foreach (TextBox txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                {
+                    txtBox_Items.Text = "";
+                    txtBox_Items.BackColor = Color.PaleTurquoise;
+                }
+                Session.status_mode = false;
             }
         }
 
@@ -968,10 +976,17 @@ namespace Shelf_Register
                 cbShelf.Text = "";
                 richTextBox1.Text = "";
                 btnCheck.Text = "CHECK";
+                resetCheck.Stop();
                 btnCheck.BackColor = Color.RoyalBlue;
                 btnLoad.BackColor = Color.RoyalBlue;
                 resetLabel(1);
+
+                if (btnConnect.Text == "StopReading") { 
+                Task.Run(() => ApiRFIDtoJan()).Wait();
+                Task.Run(() => ApiGetDataFromBQ()).Wait();
+                Task.Run(() => ApiGetImage()).Wait();
                 updateView();
+                }
             }
         }
 
@@ -3441,6 +3456,7 @@ namespace Shelf_Register
                     Session.productPos["temp"].link_image = "blank_background.png";
                 }
                 Console.WriteLine("Saved data to temp");
+                lastChoose = choosingImage;
             }
 
             if (lastChoose == null)
@@ -3489,7 +3505,7 @@ namespace Shelf_Register
                         Session.productPos[choosingImage.Name] = data;
                         lastChoose = choosingImage;
                     }
-                    else
+                    else 
                     {
                         ////New feature
                         if (Session.productPos.Keys.Contains("temp"))
@@ -3513,7 +3529,7 @@ namespace Shelf_Register
                                     }
                                 }
                             }
-                            lastChoose = choosingImage;
+                            
                             //Add data to dictionary
                             data.Jancode = Session.productPos[choosingImage.Name].Jancode;
                             data.RFIDcode = Session.productPos[choosingImage.Name].RFIDcode;
@@ -3523,11 +3539,12 @@ namespace Shelf_Register
                             Session.productPos[choosingImage.Name] = data;
                             Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
                             Session.productPos.Remove("temp");
+                           
                         }
                     }
                 }
             }
-            //HERE
+            // NEXT STEP
             else if (choosingImage.ImageLocation == "blank_background.png")
             {
                 // Check duplicate RFID + Image
@@ -3583,8 +3600,9 @@ namespace Shelf_Register
                             }
                             else
                             {
+                                //Here
                                 pic.Load("blank_background.png");
-                                break;
+                                //break;
                             }
 
                         }
@@ -3634,6 +3652,8 @@ namespace Shelf_Register
                         //HERE
                         Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
                         Session.productPos.Remove("temp");
+                        //Session.productPos.Remove(lastChoose.Name);
+                        //lastChoose = choosingImage;
                     }
                 }
             }
@@ -3641,6 +3661,12 @@ namespace Shelf_Register
             {
                 
             }
+            if (lastChoose != null)
+            {
+                Console.WriteLine("Choosing image is", choosingImage.Name.ToString());
+                Console.WriteLine("Last choose is", lastChoose.Name.ToString());
+            }
+
             updateName();
         }
 
@@ -3809,7 +3835,6 @@ namespace Shelf_Register
             }
 
 
-
         }
 
         private PictureBox getPictureBoxByName(string name)
@@ -3874,6 +3899,8 @@ namespace Shelf_Register
             //Wait wait = new Wait();
             //wait.Visible = true;
             updateStatus();
+            api_message = " Check status complete ";
+            richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + api_message + "\n";
             //wait.Visible = false;
         }
     }

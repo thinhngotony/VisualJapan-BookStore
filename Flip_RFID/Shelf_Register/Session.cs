@@ -125,6 +125,8 @@ namespace Shelf_Register
         //BarcodeFormat//////BarcodeFormat//////BarcodeFormat//////BarcodeFormat//////BarcodeFormat//////BarcodeFormat////
         public static int JanLen = 13;
         public static string key_drawtext = "";
+        public static string display_time = "";
+        public static int time = 10;
         public static bool status_mode = false;
     }
 }

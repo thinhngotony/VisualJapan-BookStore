@@ -88,8 +88,6 @@ namespace Shelf_Register
             this.textBox_1_1 = new System.Windows.Forms.TextBox();
             this.textBox_3_6 = new System.Windows.Forms.TextBox();
             this.textBox_4_6 = new System.Windows.Forms.TextBox();
-            this.textBox23 = new System.Windows.Forms.TextBox();
-            this.textBox22 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtScanner = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -101,6 +99,7 @@ namespace Shelf_Register
             this.txtName = new System.Windows.Forms.TextBox();
             this.lbName = new System.Windows.Forms.Label();
             this.resetCheck = new System.Windows.Forms.Timer(this.components);
+            this.countDown = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_3)).BeginInit();
@@ -859,22 +858,6 @@ namespace Shelf_Register
             this.textBox_4_6.Size = new System.Drawing.Size(112, 43);
             this.textBox_4_6.TabIndex = 79;
             // 
-            // textBox23
-            // 
-            this.textBox23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox23.Location = new System.Drawing.Point(661, 535);
-            this.textBox23.Name = "textBox23";
-            this.textBox23.Size = new System.Drawing.Size(87, 20);
-            this.textBox23.TabIndex = 79;
-            // 
-            // textBox22
-            // 
-            this.textBox22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox22.Location = new System.Drawing.Point(543, 535);
-            this.textBox22.Name = "textBox22";
-            this.textBox22.Size = new System.Drawing.Size(87, 20);
-            this.textBox22.TabIndex = 78;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -995,6 +978,11 @@ namespace Shelf_Register
             this.resetCheck.Interval = 5000;
             this.resetCheck.Tick += new System.EventHandler(this.resetCheck_Tick);
             // 
+            // countDown
+            // 
+            this.countDown.Interval = 1000;
+            this.countDown.Tick += new System.EventHandler(this.countDown_Tick);
+            // 
             // Front
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1105,8 +1093,6 @@ namespace Shelf_Register
         private System.Windows.Forms.TextBox textBox_1_1;
         private System.Windows.Forms.TextBox textBox_1_3;
         private System.Windows.Forms.TextBox textBox_1_2;
-        private System.Windows.Forms.TextBox textBox23;
-        private System.Windows.Forms.TextBox textBox22;
         private System.Windows.Forms.TextBox textBox_4_4;
         private System.Windows.Forms.TextBox textBox_4_3;
         private System.Windows.Forms.TextBox textBox_4_2;
@@ -1126,12 +1112,11 @@ namespace Shelf_Register
         private System.Windows.Forms.TextBox textBox_1_6;
         private System.Windows.Forms.TextBox textBox_1_5;
         private System.Windows.Forms.TextBox textBox_1_4;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox_4_6;
         private System.Windows.Forms.TextBox textBox_4_5;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.Timer resetCheck;
+        private System.Windows.Forms.Timer countDown;
     }
 }
-

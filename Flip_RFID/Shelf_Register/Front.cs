@@ -12,6 +12,7 @@ using System.Net.Http;
 
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -67,6 +68,7 @@ namespace Shelf_Register
             Session.device_name = dataInFile["device_name"];
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);
             resetCheck.Interval = (int)Int64.Parse(dataInFile["interval_miliseconds"]);
+            Session.time = resetCheck.Interval/1000;
             Session.JanLen = (int)Int64.Parse(dataInFile["JanLen"]);
             Session.sub_rfid_to_status_smart_self = dataInFile["sub_rfid_to_status_smart_self"];
 
@@ -3652,8 +3654,6 @@ namespace Shelf_Register
                         //HERE
                         Session.productPos.Remove(Session.productPos["temp"].picture_box.Name);
                         Session.productPos.Remove("temp");
-                        //Session.productPos.Remove(lastChoose.Name);
-                        //lastChoose = choosingImage;
                     }
                 }
             }
@@ -3759,13 +3759,15 @@ namespace Shelf_Register
             updateName();
             wait.Visible = false;
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + " Finish load image \n";
-
             btnLoad.BackColor = Color.ForestGreen;
             if (btnCheck.BackColor == Color.ForestGreen)
             {
                 btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
                 resetCheck.Stop();
+                countDown.Stop();
+                Session.time = resetCheck.Interval / 1000;
+
             }
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
@@ -3813,6 +3815,7 @@ namespace Shelf_Register
             //updateName();
             //updateStatus();
             //wait.Visible = false;
+
             btnCheck.Text = btnCheck.Text == "CHECK" ? "CHECKING..." : "CHECK";
             if (btnCheck.Text == "CHECKING...")
             {
@@ -3826,10 +3829,13 @@ namespace Shelf_Register
                 {
                     btnLoad.BackColor = Color.RoyalBlue;
                 }
+                countDown.Start();
             }
             else
             {
+
                 resetCheck.Stop();
+                countDown.Stop();
                 btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
             }
@@ -3898,10 +3904,21 @@ namespace Shelf_Register
         {
             //Wait wait = new Wait();
             //wait.Visible = true;
+            Session.time = resetCheck.Interval / 1000;
             updateStatus();
             api_message = " Check status complete ";
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + api_message + "\n";
             //wait.Visible = false;
+        }
+
+        private void countDown_Tick(object sender, EventArgs e)
+        {
+            Session.time--;
+            if(Session.time == 0)
+            {
+                Session.time = resetCheck.Interval/1000;
+            }
+            btnCheck.Text = "CHECKING..." + "\r\n" + Session.time.ToString() + "s";
         }
     }
 }

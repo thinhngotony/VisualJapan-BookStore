@@ -994,10 +994,12 @@ namespace Shelf_Register
             this.txtInterval.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtInterval.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtInterval.Location = new System.Drawing.Point(793, 175);
+            this.txtInterval.MaxLength = 10;
             this.txtInterval.Name = "txtInterval";
             this.txtInterval.Size = new System.Drawing.Size(219, 25);
             this.txtInterval.TabIndex = 67;
             this.txtInterval.TextChanged += new System.EventHandler(this.txtInterval_TextChanged);
+            this.txtInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInterval_KeyPress);
             // 
             // Front
             // 

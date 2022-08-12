@@ -858,61 +858,61 @@ namespace Shelf_Register
         private void Front_KeyDown(object sender, KeyEventArgs e)
         {
 
-            if (e.KeyCode == Keys.Return && barcode_state)
-            {
-                barcode = "";
-                rfid_reading = false;
+            //if (e.KeyCode == Keys.Return && barcode_state)
+            //{
+            //    barcode = "";
+            //    rfid_reading = false;
 
-                Wait wait = new Wait();
+            //    Wait wait = new Wait();
 
-                //Clear after test
-                //wait.Visible = true;
-                //Task.Run(() => ApiRFIDtoJan()).Wait();
-                //Task.Run(() => ApiGetDataFromBQ()).Wait();
-                //wait.Visible = false;
-                //Task.Run(() => ApiGetImage()).Wait();
-                //updateView();
+            //    //Clear after test
+            //    //wait.Visible = true;
+            //    //Task.Run(() => ApiRFIDtoJan()).Wait();
+            //    //Task.Run(() => ApiGetDataFromBQ()).Wait();
+            //    //wait.Visible = false;
+            //    //Task.Run(() => ApiGetImage()).Wait();
+            //    //updateView();
 
 
 
-                if (!Session.barcode.Equals("") && !Session.rfidcode.Equals(""))
-                {
+            //    if (!Session.barcode.Equals("") && !Session.rfidcode.Equals(""))
+            //    {
 
-                    rfid_cd = Session.rfidcode;
-                    jan_cd = Session.barcode;
+            //        rfid_cd = Session.rfidcode;
+            //        jan_cd = Session.barcode;
 
-                }
-                rfid_reading = true;
-            }
+            //    }
+            //    rfid_reading = true;
+            //}
 
 
         }
 
         private void Front_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (barcode_state)
-            {
-                if (Char.IsDigit(e.KeyChar))
-                {
-                    barcode += e.KeyChar;
-                }
-                if (barcode.Length == Session.JanLen)
-                {
-                    if (barcode.Substring(0, 3).Equals("192") || barcode.Substring(0, 3).Equals("191"))
-                    {
-                        barcode = "";
-                        Session.barcode = "";
-                    }
-                    else
-                    {
-                        Session.barcode = barcode;
+            //if (barcode_state)
+            //{
+            //    if (Char.IsDigit(e.KeyChar))
+            //    {
+            //        barcode += e.KeyChar;
+            //    }
+            //    if (barcode.Length == Session.JanLen)
+            //    {
+            //        if (barcode.Substring(0, 3).Equals("192") || barcode.Substring(0, 3).Equals("191"))
+            //        {
+            //            barcode = "";
+            //            Session.barcode = "";
+            //        }
+            //        else
+            //        {
+            //            Session.barcode = barcode;
 
-                        barcode = "";
-                    }
+            //            barcode = "";
+            //        }
 
-                    updateView();
-                }
-            }
+            //        updateView();
+            //    }
+            //}
         }
 
 
@@ -1036,9 +1036,7 @@ namespace Shelf_Register
 
         }
 
-        private void txtJan_TextChanged(object sender, EventArgs e)
-        {
-        }
+
 
         private void txtPName_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -3663,11 +3661,6 @@ namespace Shelf_Register
             {
                 
             }
-            if (lastChoose != null)
-            {
-                Console.WriteLine("Choosing image is", choosingImage.Name.ToString());
-                Console.WriteLine("Last choose is", lastChoose.Name.ToString());
-            }
 
             updateName();
         }
@@ -3832,6 +3825,7 @@ namespace Shelf_Register
             }
             else
             {
+
                 countDown.Stop();
                 btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
@@ -3925,6 +3919,26 @@ namespace Shelf_Register
         {
             // Bugging
             Session.time = (int)Int64.Parse(txtInterval.Text);
+        }
+
+        private void txtInterval_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Verify that the pressed key isn't CTRL or any non-numeric digit
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            // If you want, you can allow decimal (float) numbers
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtJan_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

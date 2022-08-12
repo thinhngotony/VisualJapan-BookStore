@@ -3458,6 +3458,16 @@ namespace Shelf_Register
                     Session.productPos["temp"].link_image = "blank_background.png";
                 }
                 Console.WriteLine("Saved data to temp");
+                // Add focus to textBox                         ;
+                foreach (var txtBox_Items in ImageLayer.Controls.OfType<TextBox>())
+                {
+                    string mapTextBox = choosingImage.Name.Replace("pictureBox", "textBox");
+                    if (txtBox_Items.Name == mapTextBox)
+                    {
+                        txtBox_Items.BackColor = Color.Yellow;
+                    }
+                }
+
                 lastChoose = choosingImage;
             }
 
@@ -3661,7 +3671,6 @@ namespace Shelf_Register
             {
                 
             }
-
             updateName();
         }
 

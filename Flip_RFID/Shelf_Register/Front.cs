@@ -67,8 +67,7 @@ namespace Shelf_Register
             Session.bquery_sub = dataInFile["bquery_sub"];
             Session.device_name = dataInFile["device_name"];
             Session.rT = (int)Int64.Parse(dataInFile["rT"]);
-            resetCheck.Interval = (int)Int64.Parse(dataInFile["interval_miliseconds"]);
-            Session.time = resetCheck.Interval/1000;
+            Session.time = (int)Int64.Parse(dataInFile["interval_miliseconds"]) / 1000;
             Session.JanLen = (int)Int64.Parse(dataInFile["JanLen"]);
             Session.sub_rfid_to_status_smart_self = dataInFile["sub_rfid_to_status_smart_self"];
 
@@ -83,9 +82,12 @@ namespace Shelf_Register
             Task.Run(() => ApiGetSmartShelfNames()).Wait();
             cbShelf.DataSource = Session.smart_shelf_names;
             cbShelf.SelectedItem = "SHELF 1";
+            txtInterval.Text = Session.time.ToString();
+
+
             //Session.OPOSRFID1.DataEvent += new _DOPOSRFIDEvents_DataEventEventHandler(OPOSRFID1_DataEvent);
 
-            
+
 
 
 
@@ -978,7 +980,7 @@ namespace Shelf_Register
                 cbShelf.Text = "";
                 richTextBox1.Text = "";
                 btnCheck.Text = "CHECK";
-                resetCheck.Stop();
+                countDown.Stop();
                 btnCheck.BackColor = Color.RoyalBlue;
                 btnLoad.BackColor = Color.RoyalBlue;
                 resetLabel(1);
@@ -3764,10 +3766,7 @@ namespace Shelf_Register
             {
                 btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
-                resetCheck.Stop();
                 countDown.Stop();
-                Session.time = resetCheck.Interval / 1000;
-
             }
             //Session.productPos.Keys.ToList().ForEach(x => Console.WriteLine("Data is " + x.ToString()+ (Session.productPos[x] as ProductPos).isbn));
 
@@ -3795,11 +3794,11 @@ namespace Shelf_Register
                 wait.Visible = true;
                 updateStatus();
                 wait.Visible = false;
-                resetCheck.Start();
+                countDown.Start();
             }
             else
             {
-                resetCheck.Stop();
+                countDown.Stop();
             }
         }
 
@@ -3823,7 +3822,7 @@ namespace Shelf_Register
                 wait.Visible = true;
                 updateStatus();
                 wait.Visible = false;
-                resetCheck.Start();
+
                 btnCheck.BackColor = Color.ForestGreen;
                 if (btnLoad.BackColor == Color.ForestGreen)
                 {
@@ -3833,8 +3832,6 @@ namespace Shelf_Register
             }
             else
             {
-
-                resetCheck.Stop();
                 countDown.Stop();
                 btnCheck.Text = "CHECK";
                 btnCheck.BackColor = Color.RoyalBlue;
@@ -3904,9 +3901,9 @@ namespace Shelf_Register
         {
             //Wait wait = new Wait();
             //wait.Visible = true;
-            Session.time = resetCheck.Interval / 1000;
+            Session.time = Session.time = (int)Int64.Parse(txtInterval.Text);
             updateStatus();
-            api_message = " Check status complete ";
+            api_message = " Check status complete";
             richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + api_message + "\n";
             //wait.Visible = false;
         }
@@ -3916,9 +3913,18 @@ namespace Shelf_Register
             Session.time--;
             if(Session.time == 0)
             {
-                Session.time = resetCheck.Interval/1000;
+                updateStatus();
+                Session.time = (int)Int64.Parse(txtInterval.Text);
+                api_message = " Check status complete";
+                richTextBox1.Text += DateTime.Now.ToString("hh:mm:ss") + api_message + "\n";
             }
             btnCheck.Text = "CHECKING..." + "\r\n" + Session.time.ToString() + "s";
+        }
+
+        private void txtInterval_TextChanged(object sender, EventArgs e)
+        {
+            // Bugging
+            Session.time = (int)Int64.Parse(txtInterval.Text);
         }
     }
 }

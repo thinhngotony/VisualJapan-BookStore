@@ -98,8 +98,9 @@ namespace Shelf_Register
             this.cbShelf = new System.Windows.Forms.ComboBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lbName = new System.Windows.Forms.Label();
-            this.resetCheck = new System.Windows.Forms.Timer(this.components);
             this.countDown = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtInterval = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_1_3)).BeginInit();
@@ -203,9 +204,9 @@ namespace Shelf_Register
             this.btnConnect.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnConnect.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConnect.ForeColor = System.Drawing.Color.White;
-            this.btnConnect.Location = new System.Drawing.Point(793, 589);
+            this.btnConnect.Location = new System.Drawing.Point(793, 608);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(108, 69);
+            this.btnConnect.Size = new System.Drawing.Size(108, 50);
             this.btnConnect.TabIndex = 5;
             this.btnConnect.Text = "CONNECT";
             this.btnConnect.UseVisualStyleBackColor = false;
@@ -862,7 +863,7 @@ namespace Shelf_Register
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(790, 204);
+            this.label1.Location = new System.Drawing.Point(790, 249);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 13);
             this.label1.TabIndex = 58;
@@ -873,7 +874,7 @@ namespace Shelf_Register
             this.txtScanner.AcceptsTab = true;
             this.txtScanner.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txtScanner.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txtScanner.Location = new System.Drawing.Point(793, 175);
+            this.txtScanner.Location = new System.Drawing.Point(793, 220);
             this.txtScanner.Name = "txtScanner";
             this.txtScanner.Size = new System.Drawing.Size(219, 25);
             this.txtScanner.TabIndex = 59;
@@ -884,7 +885,7 @@ namespace Shelf_Register
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(790, 159);
+            this.label2.Location = new System.Drawing.Point(790, 204);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 60;
@@ -895,9 +896,9 @@ namespace Shelf_Register
             this.btnRegister.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnRegister.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnRegister.ForeColor = System.Drawing.Color.White;
-            this.btnRegister.Location = new System.Drawing.Point(793, 513);
+            this.btnRegister.Location = new System.Drawing.Point(793, 552);
             this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(108, 69);
+            this.btnRegister.Size = new System.Drawing.Size(108, 50);
             this.btnRegister.TabIndex = 61;
             this.btnRegister.Text = "REGISTER";
             this.btnRegister.UseVisualStyleBackColor = false;
@@ -905,7 +906,7 @@ namespace Shelf_Register
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(801, 256);
+            this.pictureBox.Location = new System.Drawing.Point(804, 299);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(199, 247);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -917,9 +918,9 @@ namespace Shelf_Register
             this.btnLoad.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnLoad.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnLoad.ForeColor = System.Drawing.Color.White;
-            this.btnLoad.Location = new System.Drawing.Point(904, 589);
+            this.btnLoad.Location = new System.Drawing.Point(904, 608);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(108, 69);
+            this.btnLoad.Size = new System.Drawing.Size(108, 50);
             this.btnLoad.TabIndex = 62;
             this.btnLoad.Text = "LOAD";
             this.btnLoad.UseVisualStyleBackColor = false;
@@ -930,9 +931,9 @@ namespace Shelf_Register
             this.btnCheck.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnCheck.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold);
             this.btnCheck.ForeColor = System.Drawing.Color.White;
-            this.btnCheck.Location = new System.Drawing.Point(904, 514);
+            this.btnCheck.Location = new System.Drawing.Point(904, 552);
             this.btnCheck.Name = "btnCheck";
-            this.btnCheck.Size = new System.Drawing.Size(108, 69);
+            this.btnCheck.Size = new System.Drawing.Size(108, 50);
             this.btnCheck.TabIndex = 63;
             this.btnCheck.Text = "CHECK";
             this.btnCheck.UseVisualStyleBackColor = false;
@@ -946,7 +947,7 @@ namespace Shelf_Register
             this.cbShelf.FormattingEnabled = true;
             this.cbShelf.Items.AddRange(new object[] {
             "before"});
-            this.cbShelf.Location = new System.Drawing.Point(793, 220);
+            this.cbShelf.Location = new System.Drawing.Point(793, 265);
             this.cbShelf.Name = "cbShelf";
             this.cbShelf.Size = new System.Drawing.Size(219, 26);
             this.cbShelf.TabIndex = 64;
@@ -973,15 +974,30 @@ namespace Shelf_Register
             this.lbName.TabIndex = 66;
             this.lbName.Text = "PRODUCT NAME";
             // 
-            // resetCheck
-            // 
-            this.resetCheck.Interval = 5000;
-            this.resetCheck.Tick += new System.EventHandler(this.resetCheck_Tick);
-            // 
             // countDown
             // 
             this.countDown.Interval = 1000;
             this.countDown.Tick += new System.EventHandler(this.countDown_Tick);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(790, 159);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(131, 13);
+            this.label3.TabIndex = 68;
+            this.label3.Text = "INTERVAL CHECK (s)";
+            // 
+            // txtInterval
+            // 
+            this.txtInterval.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtInterval.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
+            this.txtInterval.Location = new System.Drawing.Point(793, 175);
+            this.txtInterval.Name = "txtInterval";
+            this.txtInterval.Size = new System.Drawing.Size(219, 25);
+            this.txtInterval.TabIndex = 67;
+            this.txtInterval.TextChanged += new System.EventHandler(this.txtInterval_TextChanged);
             // 
             // Front
             // 
@@ -989,6 +1005,8 @@ namespace Shelf_Register
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1024, 768);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtInterval);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbName);
             this.Controls.Add(this.txtName);
@@ -1116,7 +1134,8 @@ namespace Shelf_Register
         private System.Windows.Forms.TextBox textBox_4_5;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lbName;
-        private System.Windows.Forms.Timer resetCheck;
         private System.Windows.Forms.Timer countDown;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtInterval;
     }
 }
